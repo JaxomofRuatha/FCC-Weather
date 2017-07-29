@@ -6,7 +6,7 @@ export class WeatherBoxDisplay extends React.Component {
   render() {
     return (
       <div>
-        <CurrentWeatherDisplay />
+        <CurrentWeatherDisplay currentForecast={this.props.currentForecast}/>
         <SearchLocationDisplay />
       </div>
     );
