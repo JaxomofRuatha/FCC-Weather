@@ -12,6 +12,7 @@ export class App extends Component {
     super(props);
     this.state = {
       currentCoordinates: [],
+      currentLocation: "",
       currentTemp: "",
       currentSummary: "",
       currentDaySummary: "",
@@ -29,6 +30,8 @@ export class App extends Component {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           this._getForecast(position.coords.latitude, position.coords.longitude);
+
+          this._getReverseGeolocation(position.coords.latitude, position.coords.longitude);
 
           this.setState({
             currentCoordinates: [position.coords.latitude, position.coords.longitude]
@@ -56,8 +59,8 @@ export class App extends Component {
 
   _onForecastSuccess = (response) => {
     const currentTemp = response.currently.temperature;
-    const currentSummary = response.minutely.summary;
-    const currentDaySummary = response.currently.summary;
+    const currentSummary = response.currently.summary;
+    const currentDaySummary = response.hourly.summary;
     const currentWind = response.currently.windSpeed;
     const currentHumidity = response.currently.humidity;
     const currentVisibility = response.currently.visibility;
@@ -80,15 +83,15 @@ export class App extends Component {
     });
   }
 
-  _getReverseGeolocation = () => {
+  _getReverseGeolocation = (latitude, longitude) => {
 
-    const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?latlng=${this.state.currentCoordinates[0]},${this.state.currentCoordinates[1]}&key=AIzaSyB2mV9wU6kQ4pTU-MFS1vUSRaAilCXorxA`;
+    const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyB2mV9wU6kQ4pTU-MFS1vUSRaAilCXorxA`;
 
     APIHelpers.apiSkeleton(url, APIHelpers.options, this._onReverseGeolocationSuccess, this._onReverseGeolocationFail);
   }
 
   _onReverseGeolocationSuccess = (response) => {
-    const currentLocation = response.results.formatted_address;
+    const currentLocation = response.results[1].formatted_address;
 
     this.setState({
       currentLocation
