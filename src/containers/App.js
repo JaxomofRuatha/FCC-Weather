@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './App.css';
 import { DateDisplay } from "../components/DateDisplay";
 import { TimeDisplay } from "../components/TimeDisplay";
 import { LocationTitleDisplay } from "../components/LocationTitleDisplay";
@@ -120,12 +119,12 @@ export class App extends Component {
 
       <div>
         <div id="title-time">
-          <DateDisplay dateString={this.state.currentDate.toDateString()} day={this.state.currentDate.getDate()} month={this.state.currentDate.getMonth()} year={this.state.currentDate.getFullYear()} />
-          <LocationTitleDisplay currentLocation={this.state.currentLocation} />
-          <TimeDisplay hour={this.state.currentDate.getHours()} minute={this.state.currentDate.getMinutes()} />
+          <DateDisplay id="date-display" dateString={this.state.currentDate.toDateString()} day={this.state.currentDate.getDate()} month={this.state.currentDate.getMonth()} year={this.state.currentDate.getFullYear()} />
+          <LocationTitleDisplay id="location-title-display" currentLocation={this.state.currentLocation} />
+          <TimeDisplay id="time-display" hour={this.state.currentDate.getHours()} minute={this.state.currentDate.getMinutes()} />
         </div>
         <div>
-          <WeatherBoxDisplay currentWeather={currentWeather}/>
+          <WeatherBoxDisplay id="weather-box-display" currentWeather={currentWeather}/>
         </div> 
 
         {
