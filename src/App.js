@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { DateDisplay } from "../components/DateDisplay";
-import { TimeDisplay } from "../components/TimeDisplay";
-import { LocationTitleDisplay } from "../components/LocationTitleDisplay";
-import { WeatherBoxDisplay } from "../components/WeatherBoxDisplay";
-import * as APIHelpers from "../utils/APIHelpers";
+import { DateDisplay } from "./components/DateDisplay";
+import { TimeDisplay } from "./components/TimeDisplay";
+import { LocationTitleDisplay } from "./components/LocationTitleDisplay";
+import { WeatherBoxDisplay } from "./components/WeatherBoxDisplay";
+import * as APIHelpers from "./utils/APIHelpers";
+import "normalize.css";
+import "./App.css";
 
 export class App extends Component {
 
@@ -117,14 +119,14 @@ export class App extends Component {
 
     return (
 
-      <div>
+      <div id="app-body">
         <div id="title-time">
-          <DateDisplay id="date-display" dateString={this.state.currentDate.toDateString()} day={this.state.currentDate.getDate()} month={this.state.currentDate.getMonth()} year={this.state.currentDate.getFullYear()} />
-          <LocationTitleDisplay id="location-title-display" currentLocation={this.state.currentLocation} />
-          <TimeDisplay id="time-display" hour={this.state.currentDate.getHours()} minute={this.state.currentDate.getMinutes()} />
+          <DateDisplay dateString={this.state.currentDate.toLocaleDateString("en-us")} day={this.state.currentDate.getDate()} month={this.state.currentDate.getMonth()} year={this.state.currentDate.getFullYear()} />
+          <LocationTitleDisplay currentLocation={this.state.currentLocation} />
+          <TimeDisplay hour={this.state.currentDate.getHours()} minute={this.state.currentDate.getMinutes()} time={this.state.currentDate.toLocaleTimeString("en-US", {hour: "2-digit", minute: "2-digit"})} />
         </div>
         <div>
-          <WeatherBoxDisplay id="weather-box-display" currentWeather={currentWeather}/>
+          <WeatherBoxDisplay currentWeather={currentWeather} />
         </div> 
 
         {
