@@ -2,7 +2,7 @@ html, body {
   box-sizing: border-box;
   text-align: center;
   background: url("https://upload.wikimedia.org/wikipedia/commons/0/07/Partly_cloudy_with_a_chance_of_rain_-_panoramio.jpg") no-repeat contain;
-
+  font-family: "Montserrat", sans-serif;
 }
 
 #app-body {
@@ -30,6 +30,7 @@ html, body {
   background-color: #353a42;
   color: #68a2ff;
   width: 20%;
+  font-size: 3.5em;
 }
 
 #weather-box-display {
@@ -40,4 +41,25 @@ html, body {
 
 #weather-summary {
   display: flex;
+  align-items: center;
+}
+
+#weather-summary button {
+  height: 50px;
+  width: 20px;
+}
+
+#weather-misc {
+  width: 100%;
+  background-color: "navy";
+  color: "white";
+}
+
+#weather-icon {
+  background-color: #353a42;
+}
+
+#temp {
+  width: 150px;
+  font-size: 70px;
 }
