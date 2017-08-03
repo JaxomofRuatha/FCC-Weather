@@ -55,16 +55,22 @@ const CurrentWeatherDisplay = ({ currentWeather }) => {
           <ReactAnimatedWeather icon={currentIconOptions.icon} color={currentIconOptions.color} size={150} animate={true} />
         </div>
         <h1 id="quick-sum">{currentWeather.currentSummary}</h1>
-        <h1 id="temp">{Math.round(currentWeather.currentTemp)}&#8457;</h1>
-        <button>&#8457;/&#8451;</button>
+        <div id="temp">
+          <h1>{Math.round(currentWeather.currentTemp)}&#8457;</h1>
+          {/*<label className="switch">
+            <input type="checkbox" />
+              <span className="slider round"></span>
+          </label>
+          <button>&#8457;/&#8451;</button>*/}
+        </div>
       </div>
       <div id="weather-lower">
         <div id="weather-misc">
           <p>
             Wind: {currentWeather.currentWind} mph
-              Humidity: {currentWeather.currentHumidity * 100}%
-              Visibility: {currentWeather.currentVisibility} miles
-            </p>
+            Humidity: {currentWeather.currentHumidity * 100}%
+            Visibility: {currentWeather.currentVisibility} miles
+          </p>
         </div>
         <div>
           <p>{currentWeather.currentDaySummary}</p>

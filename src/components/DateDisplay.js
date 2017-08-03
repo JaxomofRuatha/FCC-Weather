@@ -4,7 +4,7 @@ export class DateDisplay extends React.Component {
   render() {
     return (
       <div id="date-display">
-        <p>{this.props.dateString}</p>
+        <p>{this.props.month + " " + this.props.day}<br />{this.props.year}</p>
       </div>
     );
   }

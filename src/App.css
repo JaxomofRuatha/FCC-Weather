@@ -1,7 +1,7 @@
 html, body {
   box-sizing: border-box;
   text-align: center;
-  background: url("https://upload.wikimedia.org/wikipedia/commons/0/07/Partly_cloudy_with_a_chance_of_rain_-_panoramio.jpg") no-repeat contain;
+  background-color: #68a2ff;
   font-family: "Montserrat", sans-serif;
 }
 
@@ -12,25 +12,32 @@ html, body {
 #title-time {
   display: flex;
   justify-content: space-around;
+  align-items: center;
   color: #033d99;
   margin-bottom: 0.5em;
+  height: 15vh;
 }
 
 #location-title-display {
-  width: 40%;
+  width: 35%;
 }
 
 #date-display {
   background-color: #353a42;
   color: #68a2ff;
   width: 20%;
+  height: 100%;
+  font-size: 2.2em;
+  border-radius: 25px 0 0 25px;
 }
 
 #time-display {
   background-color: #353a42;
   color: #68a2ff;
   width: 20%;
-  font-size: 3.5em;
+  height: 100%;
+  font-size: 3em;
+  border-radius: 0 25px 25px 0;
 }
 
 #weather-box-display {
@@ -42,6 +49,7 @@ html, body {
 #weather-summary {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 #weather-summary button {
@@ -49,17 +57,117 @@ html, body {
   width: 20px;
 }
 
+#weather-lower {
+  background-color: #033d99;
+  color: white;
+  padding: 2px;
+}
+
 #weather-misc {
   width: 100%;
-  background-color: "navy";
-  color: "white";
 }
 
 #weather-icon {
   background-color: #353a42;
+  padding: 10px;
+  width: 15%;
+  border-radius: 25px;
+}
+
+#quick-sum {
+  color: #353a42;
+  width: 25%;
+  padding: 0 40px 0 40px;
+  font-size: 3.5em;
 }
 
 #temp {
-  width: 150px;
-  font-size: 70px;
+  background-color: #353a42;
+  color: #f26b18;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 15%;
+  min-width: 15%;
+  font-size: 2em;
+  border-radius: 25px;
+}
+
+#search-location {
+  background-color: #033d99;
+  color: white;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px auto 10px auto;
+}
+
+#search-location input {
+  margin: 0 20px 0 20px;
+  min-width: 30vw;
+}
+
+
+
+
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 40px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: black;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateY(26px);
+  -ms-transform: translateY(26px);
+  transform: translateY(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

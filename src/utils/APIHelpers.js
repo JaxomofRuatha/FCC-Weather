@@ -1,11 +1,11 @@
 export const options = {
   cache: "default",
-    dataType: "jsonp",
-      headers: {
+  dataType: "jsonp",
+  headers: {
     "Content-Type": "application/x-www-form-urlencoded"
   },
   method: "GET",
-    mode: "cors"
+  mode: "cors"
 }
 
 export function checkStatus(response) {

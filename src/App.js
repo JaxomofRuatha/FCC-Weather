@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from "moment";
 import { DateDisplay } from "./components/DateDisplay";
 import { TimeDisplay } from "./components/TimeDisplay";
 import { LocationTitleDisplay } from "./components/LocationTitleDisplay";
@@ -21,7 +22,6 @@ export class App extends Component {
       currentHumidity: "",
       currentVisibility: "",
       currentIcon: "",
-      currentDate: new Date(),
       error: null
     };
   }
@@ -43,9 +43,17 @@ export class App extends Component {
           this.setState({
             error: new Error("Failed request to geolocation")
           });
+          fetch("https://ipinfo.io/json", APIHelpers.options)
+            .then((response) => {
+              if (response.ok) {
+                this.setState({
+                  currentCoordinates: [response.loc[0], response.loc[1]]
+                });
+            }
+          })
         }
       );
-    } else {
+        } else {
       this.setState({
         error: new Error("Your browser does not support geolocation")
       });
@@ -121,9 +129,9 @@ export class App extends Component {
 
       <div id="app-body">
         <div id="title-time">
-          <DateDisplay dateString={this.state.currentDate.toLocaleDateString("en-us")} day={this.state.currentDate.getDate()} month={this.state.currentDate.getMonth()} year={this.state.currentDate.getFullYear()} />
+          <DateDisplay day={moment().format("Do")} month={moment().format("MMMM")} year={moment().format("YYYY")} />
           <LocationTitleDisplay currentLocation={this.state.currentLocation} />
-          <TimeDisplay hour={this.state.currentDate.getHours()} minute={this.state.currentDate.getMinutes()} time={this.state.currentDate.toLocaleTimeString("en-US", {hour: "2-digit", minute: "2-digit"})} />
+          <TimeDisplay time={moment().format("hh:mm A")} />
         </div>
         <div>
           <WeatherBoxDisplay currentWeather={currentWeather} />

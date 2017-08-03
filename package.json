@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "eslint": "^4.3.0",
+    "moment": "^2.18.1",
     "normalize.css": "^7.0.0",
     "react": "^15.6.1",
     "react-animated-weather": "^0.1.6",
