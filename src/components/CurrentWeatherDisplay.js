@@ -1,53 +1,7 @@
 import React from "react";
 import ReactAnimatedWeather from "react-animated-weather";
 
-const iconOptions = (currentIcon) => {
-  switch (currentIcon) {
-    case "clear-day": return {
-      icon: 'CLEAR_DAY',
-      color: '#fce637',
-    };
-    case "clear-night": return {
-      icon: 'CLEAR_NIGHT',
-      color: '#FFFFFF',
-    };
-    case "partly-cloudy-day": return {
-      "icon": 'PARTLY_CLOUDY_DAY',
-      "color": '#FFFDED',
-    };
-    case "partly-cloudy-night": return {
-      icon: 'PARTLY_CLOUDY_NIGHT',
-      color: '#edf4ff',
-    };
-    case "cloudy": return {
-      icon: 'CLOUDY',
-      color: '#edf4ff',
-    };
-    case "rain": return {
-      icon: 'RAIN',
-      color: '#91bbff',
-    };
-    case "sleet": return {
-      icon: 'SLEET',
-      color: '#7d99c6',
-    };
-    case "snow": return {
-      icon: 'SNOW',
-      color: '#c2cad6',
-    };
-    case "wind": return {
-      icon: 'CLEAR_DAY',
-      color: 'goldenrod',
-    };
-    case "fog": return {
-      icon: 'FOG',
-      color: '#cdd1d6',
-    };
-  }
-};
-const CurrentWeatherDisplay = ({currentWeather, tempColor}) => {
-  let currentIconOptions = iconOptions(currentWeather.currentIcon) || { "icon": "PARTLY_CLOUDY_DAY", "color": "goldenrod" };
-  console.log(currentIconOptions);
+const CurrentWeatherDisplay = ({currentWeather, tempColor, currentIconOptions}) => {
   return (
     <div>
       <div id="weather-summary">
@@ -57,11 +11,6 @@ const CurrentWeatherDisplay = ({currentWeather, tempColor}) => {
         <h1 id="quick-sum">{currentWeather.currentSummary}</h1>
         <div id="temp" style={{ color: tempColor }}>
           <h1>{Math.round(currentWeather.currentTemp)}&#8457;</h1>
-          {/*<label className="switch">
-            <input type="checkbox" />
-              <span className="slider round"></span>
-          </label>
-          <button>&#8457;/&#8451;</button>*/}
         </div>
       </div>
       <div id="weather-lower">

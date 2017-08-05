@@ -1,11 +1,6 @@
 body {
   box-sizing: border-box;
   text-align: center;
-  background: url(https://c.pxhere.com/photos/75/6c/sun_halo_rainbow_blue_sunny_day_beautiful_circle-720900.jpg!d) no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
   font-family: "Montserrat", sans-serif;
   overflow: hidden;
 }

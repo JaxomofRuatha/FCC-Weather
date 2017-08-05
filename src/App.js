@@ -22,14 +22,24 @@ export class App extends Component {
       currentHumidity: "",
       currentVisibility: "",
       currentIcon: "",
+      currentIconOptions: {
+        icon: "CLEAR_DAY",
+        color: "",
+        background: ""
+      },
       error: null
     };
   }
 
   componentDidMount() {
+
+    //If browser geolocation is enabled, set coordinates in state.
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
+          //TODO: ipinfo call is not working because this is set up outside of geolocation update -_-
+
           this._getForecast(position.coords.latitude, position.coords.longitude);
 
           this._getReverseGeolocation(position.coords.latitude, position.coords.longitude);
@@ -38,6 +48,8 @@ export class App extends Component {
             currentCoordinates: [position.coords.latitude, position.coords.longitude]
           });
         },
+
+    //If geolocation fails, throw an error and query ipinfo.io
 
         () => {
           this.setState({
@@ -85,7 +97,7 @@ export class App extends Component {
       currentHumidity,
       currentVisibility,
       currentIcon
-    })
+    }, this._handleWeatherUpdate(currentIcon));
   }
 
   _onForecastFail = (error) => {
@@ -106,12 +118,82 @@ export class App extends Component {
 
     this.setState({
       currentLocation
-    })
+    });
   }
   
   _onReverseGeolocationFail = (error) => {
     this.setState({
       error
+    });
+  }
+
+  _handleWeatherUpdate = (currentIcon) => {
+
+    const iconOptions = (currentIcon) => {
+      switch (currentIcon) {
+        case "clear-day": return {
+          icon: 'CLEAR_DAY',
+          color: '#fce637',
+          background: 'https://c.pxhere.com/photos/75/6c/sun_halo_rainbow_blue_sunny_day_beautiful_circle-720900.jpg!d'
+        };
+        case "clear-night": return {
+          icon: 'CLEAR_NIGHT',
+          color: '#FFFFFF',
+          background: 'https://upload.wikimedia.org/wikipedia/commons/e/e9/February_-conservationlands15_Social_Media_Takeover-_Top_15_Places_on_National_Conservation_Lands_for_Night_Sky_Viewing_%2816358792937%29.jpg'
+        };
+        case "partly-cloudy-day": return {
+          "icon": 'PARTLY_CLOUDY_DAY',
+          "color": '#FFFDED',
+          background: 'https://static.pexels.com/photos/55787/pexels-photo-55787.jpeg'
+        };
+        case "partly-cloudy-night": return {
+          icon: 'PARTLY_CLOUDY_NIGHT',
+          color: '#edf4ff',
+          background: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/British_Night_Sky_%286819479424%29.jpg'
+        };
+        case "cloudy": return {
+          icon: 'CLOUDY',
+          color: '#edf4ff',
+          background: 'https://upload.wikimedia.org/wikipedia/commons/c/c0/Cloudy_Sky_of_Ahwaz.JPG'
+        };
+        case "rain": return {
+          icon: 'RAIN',
+          color: '#91bbff',
+          background: 'https://static.pexels.com/photos/1553/glass-rainy-car-rain.jpg'
+        };
+        case "sleet": return {
+          icon: 'SLEET',
+          color: '#7d99c6',
+          background: 'https://upload.wikimedia.org/wikipedia/en/a/a3/Frozen_road_with_trees_december_2008_ice_storm.JPG'
+        };
+        case "snow": return {
+          icon: 'SNOW',
+          color: '#c2cad6',
+          background: 'https://c.pxhere.com/photos/5b/e6/cold_snow_forest_winter_trees_fog_foggy_snowing-592107.jpg!d'
+        };
+        case "wind": return {
+          icon: 'WIND',
+          color: '#3FBF74',
+          background: 'https://c.pxhere.com/photos/72/27/landscape_spring_lake_nature_reserve_nature_moorland_wetland_summer_grasses-547407.jpg!d'
+        };
+        case "fog": return {
+          icon: 'FOG',
+          color: '#cdd1d6',
+          background: 'https://static.pexels.com/photos/18855/pexels-photo.jpg'
+        };
+        default: return {
+          icon: 'CLEAR_DAY',
+          color: '#353a42',
+          background: ''
+        }
+      }
+    };
+
+    this.setState({
+      currentIconOptions: iconOptions(currentIcon)
+    }, () => {
+      document.body.style.background = `url(${this.state.currentIconOptions.background}) no-repeat center center fixed`;
+      document.body.style.backgroundSize = "cover";
     });
   }
 
@@ -141,7 +223,7 @@ export class App extends Component {
       }
     };
 
-    const currentTempColor= tempColor(this.state.currentTemp);
+    const currentTempColor = tempColor(this.state.currentTemp);
 
     return (
 
@@ -152,7 +234,7 @@ export class App extends Component {
           <TimeDisplay time={moment().format("hh:mm A")} />
         </div>
         <div>
-          <WeatherBoxDisplay currentWeather={currentWeather} tempColor={currentTempColor} />
+          <WeatherBoxDisplay currentWeather={currentWeather} tempColor={currentTempColor} currentIconOptions={this.state.currentIconOptions} />
         </div> 
 
         {
