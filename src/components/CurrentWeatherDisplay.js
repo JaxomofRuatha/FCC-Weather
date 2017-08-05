@@ -45,7 +45,7 @@ const iconOptions = (currentIcon) => {
     };
   }
 };
-const CurrentWeatherDisplay = ({ currentWeather }) => {
+const CurrentWeatherDisplay = ({currentWeather}) => {
   let currentIconOptions = iconOptions(currentWeather.currentIcon) || { "icon": "PARTLY_CLOUDY_DAY", "color": "goldenrod" };
   console.log(currentIconOptions);
   return (

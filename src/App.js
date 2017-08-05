@@ -124,6 +124,20 @@ export class App extends Component {
       currentVisibility: this.state.currentVisibility,
       currentIcon: this.state.currentIcon
     };
+    const tempColor = (temp) => {
+      if (temp <= 32) {
+        return "#00229E"
+      }
+      else if (temp <= 60) {
+        return "#1CF20C"
+      }
+      else if (temp <= 80) {
+        return "#EBA713"
+      }
+      else if (temp > 80) {
+        return "#f26b18"
+      }
+    };
 
     return (
 
@@ -133,8 +147,8 @@ export class App extends Component {
           <LocationTitleDisplay currentLocation={this.state.currentLocation} />
           <TimeDisplay time={moment().format("hh:mm A")} />
         </div>
-        <div>
-          <WeatherBoxDisplay currentWeather={currentWeather} />
+        <div id="box-wrap">
+          <WeatherBoxDisplay currentWeather={currentWeather} tempColor={tempColor} />
         </div> 
 
         {

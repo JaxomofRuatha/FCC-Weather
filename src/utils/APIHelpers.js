@@ -22,24 +22,29 @@ export function apiSkeleton(url, options, onRequestSuccess, onRequestFail) {
     .then(checkStatus).catch((error) => {
       throw error;
     })
+
     .then((response) => response.json())
+
     .then((json) => {
       onRequestSuccess(json);
-    }).catch((error) => {
+    })
+    
+    .catch((error) => {
       const response = error.response;
       if (response === undefined) {
         onRequestFail(error);
       } else {
         error.status = response.status;
         error.statusText = response.statusText;
-        response.text().then((text) => {
+        response.text()
+          
+          .then((text) => {
           try {
             const json = JSON.parse(text);
             error.message = json.message;
           } catch (ex) {
             error.message = text;
           }
-
           onRequestFail(error);
         });
       }
