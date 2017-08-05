@@ -1,7 +1,7 @@
-html, body {
+body {
   box-sizing: border-box;
   text-align: center;
-  background: url(https://static.pexels.com/photos/55787/pexels-photo-55787.jpeg) no-repeat center center fixed;
+  background: url(https://c.pxhere.com/photos/75/6c/sun_halo_rainbow_blue_sunny_day_beautiful_circle-720900.jpg!d) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -15,16 +15,12 @@ html, body {
   width: 100%;
 }
 
-#box-wrap {
-  width: 100%;
-}
-
 #title-time {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  color: #033d99;
-  margin: 0 auto 0.5em auto;
+  color: #0B0682;
+  margin: 0 auto 1em auto;
   height: 15vh;
   width: 95%;
 }
@@ -33,6 +29,7 @@ html, body {
   width: 100%;
   height: 100%;
   background-color: rgba(132, 154, 214, 0.47);
+  font-size: vw;
 }
 
 #date-display {
@@ -74,7 +71,7 @@ html, body {
 }
 
 #weather-lower {
-  background-color: #033d99;
+  background-color: #0B0682;
   color: white;
   padding: 2px;
   width: 100%;
@@ -112,7 +109,7 @@ html, body {
 }
 
 #search-location {
-  background-color: #033d99;
+  background-color: #0B0682;
   color: white;
   width: 100%;
   display: flex;

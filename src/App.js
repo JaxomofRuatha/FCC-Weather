@@ -36,14 +36,15 @@ export class App extends Component {
 
           this.setState({
             currentCoordinates: [position.coords.latitude, position.coords.longitude]
-          })
+          });
         },
 
         () => {
           this.setState({
             error: new Error("Failed request to geolocation")
           });
-          fetch("https://ipinfo.io/json", APIHelpers.options)
+          fetch("https://ipinfo.io/geo", APIHelpers.options)
+            
             .then((response) => {
               if (response.ok) {
                 this.setState({
@@ -53,6 +54,7 @@ export class App extends Component {
           })
         }
       );
+
         } else {
       this.setState({
         error: new Error("Your browser does not support geolocation")
@@ -139,6 +141,8 @@ export class App extends Component {
       }
     };
 
+    const currentTempColor= tempColor(this.state.currentTemp);
+
     return (
 
       <div id="app-body">
@@ -147,8 +151,8 @@ export class App extends Component {
           <LocationTitleDisplay currentLocation={this.state.currentLocation} />
           <TimeDisplay time={moment().format("hh:mm A")} />
         </div>
-        <div id="box-wrap">
-          <WeatherBoxDisplay currentWeather={currentWeather} tempColor={tempColor} />
+        <div>
+          <WeatherBoxDisplay currentWeather={currentWeather} tempColor={currentTempColor} />
         </div> 
 
         {

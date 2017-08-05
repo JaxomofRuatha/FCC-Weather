@@ -12,8 +12,8 @@ const iconOptions = (currentIcon) => {
       color: '#FFFFFF',
     };
     case "partly-cloudy-day": return {
-      icon: 'PARTLY_CLOUDY_DAY',
-      color: '#FFFDED',
+      "icon": 'PARTLY_CLOUDY_DAY',
+      "color": '#FFFDED',
     };
     case "partly-cloudy-night": return {
       icon: 'PARTLY_CLOUDY_NIGHT',
@@ -45,7 +45,7 @@ const iconOptions = (currentIcon) => {
     };
   }
 };
-const CurrentWeatherDisplay = ({currentWeather}) => {
+const CurrentWeatherDisplay = ({currentWeather, tempColor}) => {
   let currentIconOptions = iconOptions(currentWeather.currentIcon) || { "icon": "PARTLY_CLOUDY_DAY", "color": "goldenrod" };
   console.log(currentIconOptions);
   return (
@@ -55,7 +55,7 @@ const CurrentWeatherDisplay = ({currentWeather}) => {
           <ReactAnimatedWeather icon={currentIconOptions.icon} color={currentIconOptions.color} size={150} animate={true} />
         </div>
         <h1 id="quick-sum">{currentWeather.currentSummary}</h1>
-        <div id="temp">
+        <div id="temp" style={{ color: tempColor }}>
           <h1>{Math.round(currentWeather.currentTemp)}&#8457;</h1>
           {/*<label className="switch">
             <input type="checkbox" />
@@ -67,9 +67,9 @@ const CurrentWeatherDisplay = ({currentWeather}) => {
       <div id="weather-lower">
         <div id="weather-misc">
           <p>
-            Wind: {currentWeather.currentWind} mph
-            Humidity: {currentWeather.currentHumidity * 100}%
-            Visibility: {currentWeather.currentVisibility} miles
+            Wind: &nbsp;{currentWeather.currentWind} mph &nbsp;|&nbsp;
+            Humidity: &nbsp;{currentWeather.currentHumidity * 100}% &nbsp;|&nbsp;
+            Visibility: &nbsp;{currentWeather.currentVisibility} miles
           </p>
         </div>
         <div>
