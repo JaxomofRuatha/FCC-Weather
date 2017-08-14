@@ -38,7 +38,6 @@ export class App extends Component {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          //TODO: ipinfo call is not working because this is set up outside of geolocation update -_-
 
           this._getForecast(position.coords.latitude, position.coords.longitude);
 
@@ -56,15 +55,16 @@ export class App extends Component {
             error: new Error("Failed request to geolocation")
           });
           fetch("https://ipinfo.io/geo", APIHelpers.options)
-            
-            .then((response) => {
-              if (response.ok) {
-                this.setState({
-                  currentCoordinates: [response.loc[0], response.loc[1]]
-                });
-            }
-          })
-        }
+           
+            .then(res => res.json())
+            .then((res) => {
+              const location = res.loc.split(",");
+              this.setState({
+                currentCoordinates: [location[0], location[1]]
+              });
+              this._getForecast(location[0], location[1]);
+            })
+          }
       );
 
         } else {
@@ -181,11 +181,6 @@ export class App extends Component {
           color: '#cdd1d6',
           background: 'https://static.pexels.com/photos/18855/pexels-photo.jpg'
         };
-        default: return {
-          icon: 'CLEAR_DAY',
-          color: '#353a42',
-          background: ''
-        }
       }
     };
 

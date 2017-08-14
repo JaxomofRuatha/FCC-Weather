@@ -6,7 +6,7 @@ const CurrentWeatherDisplay = ({currentWeather, tempColor, currentIconOptions}) 
     <div>
       <div id="weather-summary">
         <div id="weather-icon">
-          <ReactAnimatedWeather icon={currentIconOptions.icon} color={currentIconOptions.color} size={150} animate={true} />
+          <ReactAnimatedWeather color={currentIconOptions.color} icon={currentIconOptions.icon} size={150} animate={true} />
         </div>
         <h1 id="quick-sum">{currentWeather.currentSummary}</h1>
         <div id="temp" style={{ color: tempColor }}>
@@ -28,11 +28,5 @@ const CurrentWeatherDisplay = ({currentWeather, tempColor, currentIconOptions}) 
     </div>
   );
 }
-
-/*CurrentWeatherDisplay.defaultProps = {
-  "currentWeather": {
-    "currentIcon": "clear_day",
-  }
-}*/
 
 export default CurrentWeatherDisplay;

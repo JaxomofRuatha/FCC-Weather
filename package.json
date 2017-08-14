@@ -2,11 +2,13 @@
   "name": "local-weather",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://jaxomofruatha.github.io/FCC-Weather/",
   "dependencies": {
+    "gh-pages": "^1.0.0",
     "moment": "^2.18.1",
     "normalize.css": "^7.0.0",
     "react": "^15.6.1",
-    "react-animated-weather": "^0.1.6",
+    "react-animated-weather": "^1.0.1",
     "react-dom": "^15.6.1",
     "react-scripts": "1.0.10"
   },
@@ -22,6 +24,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   }
 }
