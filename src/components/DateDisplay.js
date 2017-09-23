@@ -1,11 +1,9 @@
 import React from "react";
 
-export class DateDisplay extends React.Component {
-  render() {
-    return (
-      <div id="date-display">
-        <p>{`${this.props.month + " " + this.props.day}, ${this.props.year}`}</p>
-      </div>
-    );
-  }
-}
+export const DateDisplay = (props) => {
+  return (
+    <div id="date-display">
+      <p>{`${props.month + " " + props.day}, ${props.year}`}</p>
+    </div>
+  );
+};
