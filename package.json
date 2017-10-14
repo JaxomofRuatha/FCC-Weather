@@ -5,26 +5,35 @@
   "homepage": "https://jaxomofruatha.github.io/FCC-Weather/",
   "dependencies": {
     "gh-pages": "^1.0.0",
-    "moment": "^2.18.1",
+    "moment": "^2.19.1",
     "normalize.css": "^7.0.0",
-    "react": "^15.6.1",
-    "react-animated-weather": "^1.0.1",
-    "react-dom": "^15.6.1",
-    "react-scripts": "1.0.10"
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-animated-weather": "^1.0.3",
+    "react-dom": "^16.0.0",
+    "react-scripts": "1.0.14"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^15.0.1",
-    "eslint-loader": "^1.8.0",
+    "babel-eslint": "^8.0.1",
+    "babel-jest": "^21.2.0",
+    "css-loader": "^0.28.7",
+    "enzyme": "^3.1.0",
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb": "^16.0.0",
+    "eslint-loader": "^1.9.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx-a11y": "^5.0.1",
-    "eslint-plugin-react": "^7.1.0"
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "gulp": "^3.9.1",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sass": "^3.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
+    "lint": "eslint --fix src",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   }

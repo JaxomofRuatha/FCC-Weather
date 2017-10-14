@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-export const DayOutlookDisplay = (props) => {
-  return (
-    <div>
-      <p>TODO</p>
-    </div>
-  );
-};
+const DayOutlookDisplay = props => (
+  <div>
+    <p>TODO</p>
+  </div>
+);
+
+export default DayOutlookDisplay;
