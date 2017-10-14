@@ -1,4 +1,4 @@
-export const REQUEST_TIMEOUT_MS = 30000;
+const REQUEST_TIMEOUT_MS = 30000;
 
 const _checkStatus = (res) => {
   if (res.ok) {
@@ -12,7 +12,7 @@ const _checkStatus = (res) => {
   }
 };
 
-export function timedRequest(ms, promise) {
+function timedRequest(ms, promise) {
   return new Promise((resolve, reject) => {
     const timeoutId = setTimeout(() => {
       reject(new Error('Request Timeout'));
@@ -30,7 +30,7 @@ export function timedRequest(ms, promise) {
   });
 }
 
-export function apiSkeleton(url, options, onRequestSuccess, onRequestFail) {
+function apiSkeleton(url, options, onRequestSuccess, onRequestFail) {
   if (!url) onRequestFail(new Error('Request url is a required field'));
   if (!options) onRequestFail(new Error('Request options is a required field'));
   const reqOptions = {
@@ -46,3 +46,5 @@ export function apiSkeleton(url, options, onRequestSuccess, onRequestFail) {
       onRequestFail(error);
     });
 }
+
+export default apiSkeleton;

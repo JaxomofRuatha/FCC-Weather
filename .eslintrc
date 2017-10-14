@@ -30,8 +30,10 @@
             "error",
             "only-multiline"
         ],
-        "no-underscore-dangle": [
-            0
+        "no-underscore-dangle": [0],
+        "quote-props": [
+            1,
+            "consistent"
         ]
     }
 }
