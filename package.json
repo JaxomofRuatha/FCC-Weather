@@ -11,6 +11,7 @@
     "react": "^16.0.0",
     "react-animated-weather": "^1.0.3",
     "react-dom": "^16.0.0",
+    "react-places-autocomplete": "^5.4.3",
     "react-scripts": "1.0.14"
   },
   "devDependencies": {
@@ -18,7 +19,7 @@
     "babel-jest": "^21.2.0",
     "css-loader": "^0.28.7",
     "enzyme": "^3.1.0",
-    "eslint": "^4.8.0",
+    "eslint": "^4.9.0",
     "eslint-config-airbnb": "^16.0.0",
     "eslint-loader": "^1.9.0",
     "eslint-plugin-import": "^2.7.0",

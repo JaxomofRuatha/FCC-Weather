@@ -11,6 +11,13 @@ const CurrentWeatherDisplay = ({ currentWeather, tempColor, currentIconOptions }
       <h1 id="quick-sum">{currentWeather.currentSummary}</h1>
       <div id="temp" style={{ color: tempColor }}>
         <h1>{Math.round(currentWeather.currentTemp)}&#8457;</h1>
+        <div>
+          <input type="checkbox" name="onoffswitch" className="onoffswitch-checkbox" id="myonoffswitch" checked />
+          <label className="onoffswitch-label" htmlFor="myonoffswitch">
+            <span className="onoffswitch-inner" />
+            <span className="onoffswitch-switch" />
+          </label>
+        </div>
       </div>
     </div>
     <div id="weather-lower">
@@ -29,7 +36,7 @@ const CurrentWeatherDisplay = ({ currentWeather, tempColor, currentIconOptions }
 );
 
 CurrentWeatherDisplay.propTypes = {
-  currentWeather: PropTypes.objectOf(PropTypes.string).isRequired,
+  currentWeather: PropTypes.shape.isRequired,
   tempColor: PropTypes.string.isRequired,
   currentIconOptions: PropTypes.objectOf(PropTypes.string).isRequired
 };

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import moment from 'moment';
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
 import 'normalize.css';
-import './App.css';
+import './css/style.css';
 
 import DateDisplay from './components/DateDisplay';
 import TimeDisplay from './components/TimeDisplay';
@@ -25,8 +26,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentCoordinates: [],
       currentLocation: '',
+      formLocation: '',
       currentTemp: '',
       currentSummary: '',
       currentDaySummary: '',
@@ -38,8 +39,7 @@ class App extends Component {
         icon: 'CLEAR_DAY',
         color: '',
         background: ''
-      },
-      error: null
+      }
     };
   }
 
@@ -52,10 +52,6 @@ class App extends Component {
           this._getForecast(position.coords.latitude, position.coords.longitude);
 
           this._getReverseGeolocation(position.coords.latitude, position.coords.longitude);
-
-          this.setState({
-            currentCoordinates: [position.coords.latitude, position.coords.longitude]
-          });
         },
 
         // If geolocation fails, query ipinfo.io
@@ -65,17 +61,10 @@ class App extends Component {
             .then(res => res.json())
             .then((res) => {
               const location = res.loc.split(',');
-              this.setState({
-                currentCoordinates: [location[0], location[1]]
-              });
               this._getForecast(location[0], location[1]);
             });
         }
       );
-    } else {
-      this.setState({
-        error: new Error('Your browser does not support geolocation')
-      });
     }
   }
 
@@ -85,14 +74,14 @@ class App extends Component {
     apiSkeleton(url, apiOpts, this._onForecastSuccess, this._onForecastFail);
   }
 
-  _onForecastSuccess = (response) => {
-    const currentTemp = response.currently.temperature;
-    const currentSummary = response.currently.summary;
-    const currentDaySummary = response.hourly.summary;
-    const currentWind = response.currently.windSpeed;
-    const currentHumidity = response.currently.humidity;
-    const currentVisibility = response.currently.visibility;
-    const currentIcon = response.currently.icon;
+  _onForecastSuccess = (res) => {
+    const currentTemp = res.currently.temperature;
+    const currentSummary = res.currently.summary;
+    const currentDaySummary = res.hourly.summary;
+    const currentWind = res.currently.windSpeed;
+    const currentHumidity = res.currently.humidity;
+    const currentVisibility = res.currently.visibility;
+    const currentIcon = res.currently.icon;
 
     this.setState({
       currentTemp,
@@ -105,10 +94,8 @@ class App extends Component {
     }, this._handleWeatherUpdate(currentIcon));
   }
 
-  _onForecastFail = (error) => {
-    this.setState({
-      error
-    });
+  _onForecastFail = (err) => {
+    // TODO: New error handling!
   }
 
   _getReverseGeolocation = (latitude, longitude) => {
@@ -125,10 +112,8 @@ class App extends Component {
     });
   }
 
-  _onReverseGeolocationFail = (error) => {
-    this.setState({
-      error
-    });
+  _onReverseGeolocationFail = (err) => {
+    // TODO: New error handling!
   }
 
   _handleWeatherUpdate = (currentIcon) => {
@@ -140,8 +125,23 @@ class App extends Component {
     });
   }
 
+  _handleFormInput = (location) => {
+    this.setState({ formLocation: location });
+  }
+
+  _handleLocationChange = (e) => {
+    e.preventDefault();
+
+    geocodeByAddress(this.state.formLocation)
+      .then(results => getLatLng(results[0]))
+      .then((coords) => {
+        this._getForecast(coords.lat, coords.lng);
+        this._getReverseGeolocation(coords.lat, coords.lng);
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
-    const error = this.state.error;
     const currentWeather = {
       currentTemp: this.state.currentTemp,
       currentSummary: this.state.currentSummary,
@@ -151,6 +151,7 @@ class App extends Component {
       currentVisibility: this.state.currentVisibility,
       currentIcon: this.state.currentIcon
     };
+
     const tempColor = (temp) => {
       if (temp <= 32) {
         return '#00229E';
@@ -158,31 +159,38 @@ class App extends Component {
         return '#1CF20C';
       } else if (temp <= 80) {
         return '#EBA713';
-      } else if (temp > 80) {
-        return '#f26b18';
       }
+      return '#f26b18';
     };
 
     const currentTempColor = tempColor(this.state.currentTemp);
+
+    const inputProps = {
+      value: this.state.formLocation,
+      onChange: this._handleFormInput,
+    };
 
     return (
 
       <div id="app-body">
         <div id="title-time">
-          <DateDisplay day={moment().format('Do')} month={moment().format('MMMM')} year={moment().format('YYYY')} />
+          <DateDisplay
+            day={moment().format('Do')}
+            month={moment().format('MMMM')}
+            year={moment().format('YYYY')}
+          />
           <LocationTitleDisplay currentLocation={this.state.currentLocation} />
           <TimeDisplay time={moment().format('hh:mm A')} />
         </div>
         <div>
-          <WeatherBoxDisplay currentWeather={currentWeather} tempColor={currentTempColor} currentIconOptions={this.state.currentIconOptions} />
+          <WeatherBoxDisplay
+            currentWeather={currentWeather}
+            tempColor={currentTempColor}
+            currentIconOptions={this.state.currentIconOptions}
+            handleLocationChange={this._handleLocationChange}
+            inputProps={inputProps}
+          />
         </div>
-
-        {
-          error &&
-          <div style={{ color: 'red' }}>
-            {error.message || error.toString} {` (${error.status} ${error.statusText})`}
-          </div>
-        }
       </div>
     );
   }

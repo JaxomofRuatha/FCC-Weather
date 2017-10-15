@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import PlacesAutocomplete from 'react-places-autocomplete';
 
 import CurrentWeatherDisplay from './CurrentWeatherDisplay';
-import SearchLocationDisplay from './SearchLocationDisplay';
 
 const WeatherBoxDisplay = props => (
   <div id="weather-box-display">
@@ -11,19 +11,25 @@ const WeatherBoxDisplay = props => (
       tempColor={props.tempColor}
       currentIconOptions={props.currentIconOptions}
     />
-    <SearchLocationDisplay />
+    <div id="search-location">
+      <h2>Check out the weather for a different location!</h2>
+      <form onSubmit={props.handleLocationChange}>
+        <PlacesAutocomplete inputProps={props.inputProps} />
+        <button type="submit">Go there!</button>
+      </form>
+    </div>
   </div>
 );
 
 WeatherBoxDisplay.propTypes = {
-  currentWeather: PropTypes.objectOf(PropTypes.string),
+  currentWeather: PropTypes.shape,
   tempColor: PropTypes.string,
   currentIconOptions: PropTypes.objectOf(PropTypes.string)
 };
 
 WeatherBoxDisplay.defaultProps = {
   currentWeather: {
-    currentTemp: '0',
+    currentTemp: 0,
     currentSummary: 'Loading...',
     currentDaySummary: 'Loading...',
     currentWind: '...',
