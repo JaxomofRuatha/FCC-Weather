@@ -5,7 +5,7 @@ import PlacesAutocomplete from 'react-places-autocomplete';
 import CurrentWeatherDisplay from './CurrentWeatherDisplay';
 
 const WeatherBoxDisplay = props => (
-  <div id="weather-box-display">
+  <div className="weather-box-display">
     <CurrentWeatherDisplay
       currentWeather={props.currentWeather}
       tempColor={props.tempColor}
@@ -22,21 +22,21 @@ const WeatherBoxDisplay = props => (
 );
 
 WeatherBoxDisplay.propTypes = {
-  currentWeather: PropTypes.shape,
+  currentWeather: PropTypes.shape({
+    currentTemp: PropTypes.number,
+    currentSummary: PropTypes.string,
+    currentDaySummary: PropTypes.string,
+    currentWind: PropTypes.string,
+    currentHumidity: PropTypes.string,
+    currentVisibility: PropTypes.string,
+    currentIcon: PropTypes.string
+  }).isRequired,
   tempColor: PropTypes.string,
-  currentIconOptions: PropTypes.objectOf(PropTypes.string)
+  currentIconOptions: PropTypes.objectOf(PropTypes.string),
+  handleLocationChange: PropTypes.func.isRequired
 };
 
 WeatherBoxDisplay.defaultProps = {
-  currentWeather: {
-    currentTemp: 0,
-    currentSummary: 'Loading...',
-    currentDaySummary: 'Loading...',
-    currentWind: '...',
-    currentHumidity: '...',
-    currentVisibility: '...',
-    currentIcon: 'clear-night'
-  },
   tempColor: '#00229E',
   currentIconOptions: {
     icon: 'CLEAR_NIGHT',

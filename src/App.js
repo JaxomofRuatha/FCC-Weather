@@ -5,9 +5,6 @@ import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import 'normalize.css';
 import './css/style.css';
 
-import DateDisplay from './components/DateDisplay';
-import TimeDisplay from './components/TimeDisplay';
-import LocationTitleDisplay from './components/LocationTitleDisplay';
 import WeatherBoxDisplay from './components/WeatherBoxDisplay';
 
 import apiSkeleton from './utils/api-helpers';
@@ -171,28 +168,14 @@ class App extends Component {
     };
 
     return (
-
-      <div id="app-body">
-        <div id="title-time">
-          <DateDisplay
-            day={moment().format('Do')}
-            month={moment().format('MMMM')}
-            year={moment().format('YYYY')}
-          />
-          <LocationTitleDisplay currentLocation={this.state.currentLocation} />
-          <TimeDisplay time={moment().format('hh:mm A')} />
+      <div className="app-container">
+        <div className="title-time">
+          <span>{`${moment().format('MMMM')} ${moment().format('Do')}, ${moment().format('YYYY')}`}</span>
+          <h1>{this.state.currentLocation}</h1>
+          <span>{moment().format('hh:mm A')}</span>
         </div>
-        <div>
-          <WeatherBoxDisplay
-            currentWeather={currentWeather}
-            tempColor={currentTempColor}
-            currentIconOptions={this.state.currentIconOptions}
-            handleLocationChange={this._handleLocationChange}
-            inputProps={inputProps}
-          />
-        </div>
-      </div>
-    );
+        <WeatherBoxDisplay currentWeather={currentWeather} tempColor={currentTempColor} currentIconOptions={this.state.currentIconOptions} handleLocationChange={this._handleLocationChange} inputProps={inputProps} />
+      </div>);
   }
 }
 

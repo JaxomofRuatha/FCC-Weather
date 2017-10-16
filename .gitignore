@@ -19,6 +19,7 @@
 **/.vscode
 **/utils/exSkycons.html
 **/utils/skycons.js
+/archive
 
 npm-debug.log*
 yarn-debug.log*
