@@ -2,31 +2,51 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactAnimatedWeather from 'react-animated-weather';
 
-const CurrentWeatherDisplay = ({ currentWeather, tempColor, currentIconOptions }) => (
+const CurrentWeatherDisplay = props => (
   <div>
-    <div id="weather-summary">
+    <div className="weather-summary">
       <div className="icon-temp">
-        <ReactAnimatedWeather color={currentIconOptions.color} icon={currentIconOptions.icon} size={150} animate />
+        <ReactAnimatedWeather
+          color={props.currentIconOptions.color}
+          icon={props.currentIconOptions.icon}
+          size={150}
+          animate
+        />
       </div>
-      <h1 id="quick-sum">{currentWeather.currentSummary}</h1>
-      <div className="icon-temp" style={{ color: tempColor }}>
-        <h1>{Math.round(currentWeather.currentTemp)}&#8457;</h1>
-        <div>
-          <input type="checkbox" name="onoffswitch" className="onoffswitch-checkbox" id="myonoffswitch" defaultChecked />
-          <label className="onoffswitch-label" htmlFor="myonoffswitch">
-            <span className="onoffswitch-inner" />
-            <span className="onoffswitch-switch" />
-          </label>
+      <div className="flex-cent-col weather-summary-title">
+        <h1>{props.currentWeather.currentSummary}</h1>
+        <div className="flex-cent-row">
+          <div className="flex-cent-col">
+            <span style={{ color: 'darkblue' }}>0</span>
+            <span className="temp-label">Low</span>
+          </div>
+          <div className="temp-gauge" />
+          <div className="flex-cent-col">
+            <span style={{ color: 'darkred' }}>100</span>
+            <span className="temp-label">High</span>
+          </div>
+        </div>
+      </div>
+      <div className="icon-temp" style={{ color: props.tempColor }}>
+        <h1>
+          {Math.round(props.currentWeather.currentTemp)}
+          <sup>&#8457;</sup>
+        </h1>
+        <div className="temp-switch">
+          <span onClick={props.handleTempSwitch}>℉</span>
+          <span>&nbsp;/&nbsp;</span>
+          <span onClick={props.handleTempSwitch}>℃</span>
         </div>
       </div>
     </div>
-    <div id="weather-lower">
+    <div className="weather-lower">
       <span>
-          Wind: &nbsp;{currentWeather.currentWind} mph &nbsp;|&nbsp;
-          Humidity: &nbsp;{currentWeather.currentHumidity * 100}% &nbsp;|&nbsp;
-          Visibility: &nbsp;{currentWeather.currentVisibility} miles
+        Wind: &nbsp;{props.currentWeather.currentWind} mph &nbsp;|&nbsp;
+        Humidity: &nbsp;{props.currentWeather.currentHumidity * 100}%
+        &nbsp;|&nbsp; Visibility: &nbsp;{props.currentWeather.currentVisibility}{' '}
+        miles
       </span>
-      <span>{currentWeather.currentDaySummary}</span>
+      <span>{props.currentWeather.currentDaySummary}</span>
     </div>
   </div>
 );

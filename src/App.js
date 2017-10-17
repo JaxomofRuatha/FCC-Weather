@@ -36,7 +36,8 @@ class App extends Component {
         icon: 'CLEAR_DAY',
         color: '',
         background: ''
-      }
+      },
+      urlOpts: {}
     };
   }
 
@@ -46,9 +47,15 @@ class App extends Component {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          this._getForecast(position.coords.latitude, position.coords.longitude);
+          this._getForecast(
+            position.coords.latitude,
+            position.coords.longitude
+          );
 
-          this._getReverseGeolocation(position.coords.latitude, position.coords.longitude);
+          this._getReverseGeolocation(
+            position.coords.latitude,
+            position.coords.longitude
+          );
         },
 
         // If geolocation fails, query ipinfo.io
@@ -65,11 +72,11 @@ class App extends Component {
     }
   }
 
-  _getForecast = (latitude, longitude) => {
-    const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/86c75ecb51f9869d11c2dcfb869d069a/${latitude},${longitude}`;
+  _getForecast = (latitude, longitude, urlOpts) => {
+    const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/86c75ecb51f9869d11c2dcfb869d069a/${latitude},${longitude}?${this.state.urlOpts.units}`;
 
     apiSkeleton(url, apiOpts, this._onForecastSuccess, this._onForecastFail);
-  }
+  };
 
   _onForecastSuccess = (res) => {
     const currentTemp = res.currently.temperature;
@@ -80,51 +87,63 @@ class App extends Component {
     const currentVisibility = res.currently.visibility;
     const currentIcon = res.currently.icon;
 
-    this.setState({
-      currentTemp,
-      currentSummary,
-      currentDaySummary,
-      currentWind,
-      currentHumidity,
-      currentVisibility,
-      currentIcon
-    }, this._handleWeatherUpdate(currentIcon));
-  }
+    this.setState(
+      {
+        currentTemp,
+        currentSummary,
+        currentDaySummary,
+        currentWind,
+        currentHumidity,
+        currentVisibility,
+        currentIcon
+      },
+      this._handleWeatherUpdate(currentIcon)
+    );
+  };
 
   _onForecastFail = (err) => {
     // TODO: New error handling!
-  }
+  };
 
   _getReverseGeolocation = (latitude, longitude) => {
     const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyB2mV9wU6kQ4pTU-MFS1vUSRaAilCXorxA`;
 
-    apiSkeleton(url, apiOpts, this._onReverseGeolocationSuccess, this._onReverseGeolocationFail);
-  }
+    apiSkeleton(
+      url,
+      apiOpts,
+      this._onReverseGeolocationSuccess,
+      this._onReverseGeolocationFail
+    );
+  };
 
   _onReverseGeolocationSuccess = (response) => {
-    const currentLocation = response.results[1].formatted_address;
+    const currentLocation = response.results[2].formatted_address;
 
     this.setState({
       currentLocation
     });
-  }
+  };
 
   _onReverseGeolocationFail = (err) => {
     // TODO: New error handling!
-  }
+  };
 
   _handleWeatherUpdate = (currentIcon) => {
-    this.setState({
-      currentIconOptions: iconOptions(currentIcon)
-    }, () => {
-      document.body.style.background = `url(${this.state.currentIconOptions.background}) no-repeat center center fixed`;
-      document.body.style.backgroundSize = 'cover';
-    });
-  }
+    this.setState(
+      {
+        currentIconOptions: iconOptions(currentIcon)
+      },
+      () => {
+        document.body.style.background = `url(${this.state.currentIconOptions
+          .background}) no-repeat center center fixed`;
+        document.body.style.backgroundSize = 'cover';
+      }
+    );
+  };
 
   _handleFormInput = (location) => {
     this.setState({ formLocation: location });
-  }
+  };
 
   _handleLocationChange = (e) => {
     e.preventDefault();
@@ -136,7 +155,12 @@ class App extends Component {
         this._getReverseGeolocation(coords.lat, coords.lng);
       })
       .catch(err => console.error(err));
-  }
+  };
+
+  _handleTempSwitch = (e) => {
+    // Change all units to SI call from API
+    console.log(e.target);
+  };
 
   render() {
     const currentWeather = {
@@ -165,17 +189,27 @@ class App extends Component {
     const inputProps = {
       value: this.state.formLocation,
       onChange: this._handleFormInput,
+      placeholder: 'Check out the weather for a different location!'
     };
 
     return (
       <div className="app-container">
         <div className="title-time">
-          <span>{`${moment().format('MMMM')} ${moment().format('Do')}, ${moment().format('YYYY')}`}</span>
+          <span>{`${moment().format('MMMM')} ${moment().format('Do')}, ${moment().format('YYYY')}`}
+          </span>
           <h1>{this.state.currentLocation}</h1>
           <span>{moment().format('hh:mm A')}</span>
         </div>
-        <WeatherBoxDisplay currentWeather={currentWeather} tempColor={currentTempColor} currentIconOptions={this.state.currentIconOptions} handleLocationChange={this._handleLocationChange} inputProps={inputProps} />
-      </div>);
+        <WeatherBoxDisplay
+          currentWeather={currentWeather}
+          tempColor={currentTempColor}
+          currentIconOptions={this.state.currentIconOptions}
+          handleLocationChange={this._handleLocationChange}
+          handleTempSwitch={this._handleTempSwitch}
+          inputProps={inputProps}
+        />
+      </div>
+    );
   }
 }
 

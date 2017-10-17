@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import PlacesAutocomplete from 'react-places-autocomplete';
 
 import CurrentWeatherDisplay from './CurrentWeatherDisplay';
+import WeekDisplay from './WeekDisplay';
 
 const WeatherBoxDisplay = props => (
   <div className="weather-box-display">
@@ -10,14 +11,18 @@ const WeatherBoxDisplay = props => (
       currentWeather={props.currentWeather}
       tempColor={props.tempColor}
       currentIconOptions={props.currentIconOptions}
+      handleTempSwitch={props.handleTempSwitch}
     />
-    <div id="search-location">
-      <h2>Check out the weather for a different location!</h2>
-      <form onSubmit={props.handleLocationChange}>
-        <PlacesAutocomplete inputProps={props.inputProps} />
-        <button type="submit">Go there!</button>
-      </form>
-    </div>
+    <WeekDisplay />
+    <form className="flex-cent-row" onSubmit={props.handleLocationChange}>
+      <PlacesAutocomplete
+        inputProps={props.inputProps}
+        styles={{
+          autocompleteContainer: { height: '90%' }
+        }}
+      />
+      <button type="submit">Go there!</button>
+    </form>
   </div>
 );
 
@@ -33,7 +38,8 @@ WeatherBoxDisplay.propTypes = {
   }).isRequired,
   tempColor: PropTypes.string,
   currentIconOptions: PropTypes.objectOf(PropTypes.string),
-  handleLocationChange: PropTypes.func.isRequired
+  handleLocationChange: PropTypes.func.isRequired,
+  handleTempSwitch: PropTypes.func.isRequired
 };
 
 WeatherBoxDisplay.defaultProps = {

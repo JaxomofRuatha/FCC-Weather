@@ -9,6 +9,6 @@ gulp.task('sass', () =>
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest('./src/css')));
 
-gulp.task('watch', () => {
+gulp.task('default', ['sass'], () => {
   gulp.watch('./src/sass/*.scss', ['sass']);
 });
