@@ -4,7 +4,7 @@ import ReactAnimatedWeather from 'react-animated-weather';
 
 const CurrentWeatherDisplay = props => (
   <div>
-    <div className="weather-summary">
+    <div className="flex-cent-row weather-summary">
       <div className="icon-temp">
         <ReactAnimatedWeather
           color={props.currentIconOptions.color}
@@ -32,11 +32,6 @@ const CurrentWeatherDisplay = props => (
           {Math.round(props.currentWeather.currentTemp)}
           <sup>&#8457;</sup>
         </h1>
-        <div className="temp-switch">
-          <span onClick={props.handleTempSwitch}>℉</span>
-          <span>&nbsp;/&nbsp;</span>
-          <span onClick={props.handleTempSwitch}>℃</span>
-        </div>
       </div>
     </div>
     <div className="weather-lower">

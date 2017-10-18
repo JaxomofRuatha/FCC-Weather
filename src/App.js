@@ -37,6 +37,7 @@ class App extends Component {
         color: '',
         background: ''
       },
+      weekWeather: [],
       urlOpts: {}
     };
   }
@@ -79,6 +80,15 @@ class App extends Component {
   };
 
   _onForecastSuccess = (res) => {
+    const weekWeather = [];
+    for (let i = 1; i < 7; i++) {
+      weekWeather.push({
+        day: moment.unix(res.daily.data[i].time).format('ddd DD'),
+        high: res.daily.data[i].temperatureHigh,
+        low: res.daily.data[i].temperatureLow,
+        icon: iconOptions(res.daily.data[i].icon)
+      });
+    }
     const currentTemp = res.currently.temperature;
     const currentSummary = res.currently.summary;
     const currentDaySummary = res.hourly.summary;
@@ -95,7 +105,8 @@ class App extends Component {
         currentWind,
         currentHumidity,
         currentVisibility,
-        currentIcon
+        currentIcon,
+        weekWeather
       },
       this._handleWeatherUpdate(currentIcon)
     );
@@ -202,6 +213,7 @@ class App extends Component {
         </div>
         <WeatherBoxDisplay
           currentWeather={currentWeather}
+          weekWeather={this.state.weekWeather}
           tempColor={currentTempColor}
           currentIconOptions={this.state.currentIconOptions}
           handleLocationChange={this._handleLocationChange}

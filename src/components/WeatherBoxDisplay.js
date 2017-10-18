@@ -5,6 +5,7 @@ import PlacesAutocomplete from 'react-places-autocomplete';
 import CurrentWeatherDisplay from './CurrentWeatherDisplay';
 import WeekDisplay from './WeekDisplay';
 
+
 const WeatherBoxDisplay = props => (
   <div className="weather-box-display">
     <CurrentWeatherDisplay
@@ -13,7 +14,7 @@ const WeatherBoxDisplay = props => (
       currentIconOptions={props.currentIconOptions}
       handleTempSwitch={props.handleTempSwitch}
     />
-    <WeekDisplay />
+    <WeekDisplay weekWeather={props.weekWeather}/>
     <form className="flex-cent-row" onSubmit={props.handleLocationChange}>
       <PlacesAutocomplete
         inputProps={props.inputProps}
