@@ -11,6 +11,31 @@ body {
   overflow: hidden;
 }
 
+form {
+  height: 2rem;
+  padding: 0.5rem 0;
+  width: 50vw;
+}
+
+button {
+  background: $med-blue;
+  color: $white;
+  transition: all 0.5s;
+  border: 2px solid $white;
+  border-radius: 0 10px 10px 0;
+  padding: 5px 10px;
+  &:hover {
+    background: $white;
+    color: $dark-blue;
+  }
+}
+
+sup:hover {
+  cursor: pointer;
+  color: $white;
+  transition: all 0.2s;
+}
+
 .flex-cent-row {
   display: flex;
   justify-content: center;
@@ -27,6 +52,7 @@ body {
 .app-container {
   width: 100%;
   margin-top: 2vh;
+  max-height: 90vh;
 }
 
 .title-time {
@@ -40,6 +66,7 @@ body {
   border: 4px solid $dark-blue;
   h1 {
     color: $white;
+    text-shadow: 1px 1px $dark-blue;
   }
   span {
     width: 100%;

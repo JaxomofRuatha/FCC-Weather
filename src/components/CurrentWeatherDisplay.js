@@ -17,12 +17,12 @@ const CurrentWeatherDisplay = props => (
         <h1>{props.currentWeather.currentSummary}</h1>
         <div className="flex-cent-row">
           <div className="flex-cent-col">
-            <span style={{ color: 'darkblue' }}>0</span>
+            <span style={{ color: 'darkblue' }}>{props.tempRange[0]}</span>
             <span className="temp-label">Low</span>
           </div>
           <div className="temp-gauge" />
           <div className="flex-cent-col">
-            <span style={{ color: 'darkred' }}>100</span>
+            <span style={{ color: 'darkred' }}>{props.tempRange[1]}</span>
             <span className="temp-label">High</span>
           </div>
         </div>
@@ -30,16 +30,19 @@ const CurrentWeatherDisplay = props => (
       <div className="icon-temp" style={{ color: props.tempColor }}>
         <h1>
           {Math.round(props.currentWeather.currentTemp)}
-          <sup>&#8457;</sup>
+          <sup id="deg-unit" onClick={props.handleUnitSwitch}>
+            &#8457;
+          </sup>
         </h1>
       </div>
     </div>
     <div className="weather-lower">
       <span>
-        Wind: &nbsp;{props.currentWeather.currentWind} mph &nbsp;|&nbsp;
-        Humidity: &nbsp;{props.currentWeather.currentHumidity * 100}%
-        &nbsp;|&nbsp; Visibility: &nbsp;{props.currentWeather.currentVisibility}{' '}
-        miles
+        Wind: &nbsp;{`${props.currentWeather.currentWind.value} ${props.currentWeather.currentWind.units}`}&nbsp;|&nbsp; Humidity:
+        &nbsp;{Math.floor(props.currentWeather.currentHumidity * 100)}%
+        &nbsp;|&nbsp; Visibility: &nbsp;{`${props.currentWeather
+          .currentVisibility.value} ${props.currentWeather.currentVisibility
+          .units}`}
       </span>
       <span>{props.currentWeather.currentDaySummary}</span>
     </div>

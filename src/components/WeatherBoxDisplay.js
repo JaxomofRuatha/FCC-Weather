@@ -10,16 +10,23 @@ const WeatherBoxDisplay = props => (
   <div className="weather-box-display">
     <CurrentWeatherDisplay
       currentWeather={props.currentWeather}
+      tempRange={props.tempRange}
       tempColor={props.tempColor}
       currentIconOptions={props.currentIconOptions}
-      handleTempSwitch={props.handleTempSwitch}
+      handleUnitSwitch={props.handleUnitSwitch}
     />
-    <WeekDisplay weekWeather={props.weekWeather}/>
+    <WeekDisplay weekWeather={props.weekWeather} />
     <form className="flex-cent-row" onSubmit={props.handleLocationChange}>
       <PlacesAutocomplete
         inputProps={props.inputProps}
         styles={{
-          autocompleteContainer: { height: '90%' }
+          root: {
+            width: '30vw'
+          },
+          input: {
+            padding: '5px',
+            width: 'inherit'
+          }
         }}
       />
       <button type="submit">Go there!</button>
@@ -40,7 +47,7 @@ WeatherBoxDisplay.propTypes = {
   tempColor: PropTypes.string,
   currentIconOptions: PropTypes.objectOf(PropTypes.string),
   handleLocationChange: PropTypes.func.isRequired,
-  handleTempSwitch: PropTypes.func.isRequired
+  handleUnitSwitch: PropTypes.func.isRequired
 };
 
 WeatherBoxDisplay.defaultProps = {

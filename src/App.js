@@ -9,6 +9,7 @@ import WeatherBoxDisplay from './components/WeatherBoxDisplay';
 
 import apiSkeleton from './utils/api-helpers';
 import iconOptions from './utils/icon-options';
+import { toMetricTemp, fromMetricTemp, toMetricDist, fromMetricDist } from './utils/unit-converters';
 
 const apiOpts = {
   cache: 'default',
@@ -23,22 +24,29 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentTemp: '',
+      tempRange: [],
+      weekWeather: [],
+      currentVisibility: {
+        value: 0,
+        units: 'miles'
+      },
+      currentWind: {
+        value: 0,
+        units: 'mph'
+      },
       currentLocation: '',
       formLocation: '',
-      currentTemp: '',
       currentSummary: '',
       currentDaySummary: '',
-      currentWind: '',
       currentHumidity: '',
-      currentVisibility: '',
       currentIcon: '',
       currentIconOptions: {
         icon: 'CLEAR_DAY',
         color: '',
         background: ''
       },
-      weekWeather: [],
-      urlOpts: {}
+      siUnits: false
     };
   }
 
@@ -73,14 +81,15 @@ class App extends Component {
     }
   }
 
-  _getForecast = (latitude, longitude, urlOpts) => {
-    const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/86c75ecb51f9869d11c2dcfb869d069a/${latitude},${longitude}?${this.state.urlOpts.units}`;
+  _getForecast = (latitude, longitude) => {
+    const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/86c75ecb51f9869d11c2dcfb869d069a/${latitude},${longitude}`;
 
     apiSkeleton(url, apiOpts, this._onForecastSuccess, this._onForecastFail);
   };
 
   _onForecastSuccess = (res) => {
     const weekWeather = [];
+
     for (let i = 1; i < 7; i++) {
       weekWeather.push({
         day: moment.unix(res.daily.data[i].time).format('ddd DD'),
@@ -89,26 +98,26 @@ class App extends Component {
         icon: iconOptions(res.daily.data[i].icon)
       });
     }
-    const currentTemp = res.currently.temperature;
-    const currentSummary = res.currently.summary;
-    const currentDaySummary = res.hourly.summary;
-    const currentWind = res.currently.windSpeed;
-    const currentHumidity = res.currently.humidity;
-    const currentVisibility = res.currently.visibility;
-    const currentIcon = res.currently.icon;
 
     this.setState(
       {
-        currentTemp,
-        currentSummary,
-        currentDaySummary,
-        currentWind,
-        currentHumidity,
-        currentVisibility,
-        currentIcon,
+        currentTemp: res.currently.temperature,
+        currentSummary: res.currently.summary,
+        currentDaySummary: res.hourly.summary,
+        currentWind: {
+          value: res.currently.windSpeed,
+          units: 'mph'
+        },
+        currentHumidity: res.currently.humidity,
+        currentVisibility: {
+          value: res.currently.visibility,
+          units: 'miles'
+        },
+        currentIcon: res.currently.icon,
+        tempRange: [Math.floor(res.daily.data[0].temperatureLow), Math.floor(res.daily.data[0].temperatureHigh)],
         weekWeather
       },
-      this._handleWeatherUpdate(currentIcon)
+      this._handleWeatherUpdate(res.currently.icon)
     );
   };
 
@@ -140,13 +149,14 @@ class App extends Component {
   };
 
   _handleWeatherUpdate = (currentIcon) => {
+    console.log(currentIcon);
     this.setState(
       {
         currentIconOptions: iconOptions(currentIcon)
       },
       () => {
-        document.body.style.background = `url(${this.state.currentIconOptions
-          .background}) no-repeat center center fixed`;
+        console.log('state:', this.state);
+        document.body.style.background = `url(${this.state.currentIconOptions.background}) no-repeat center center fixed`;
         document.body.style.backgroundSize = 'cover';
       }
     );
@@ -168,9 +178,54 @@ class App extends Component {
       .catch(err => console.error(err));
   };
 
-  _handleTempSwitch = (e) => {
-    // Change all units to SI call from API
-    console.log(e.target);
+  _handleUnitSwitch = () => {
+    function weekHelper(week, converter) {
+      return week.map(day => ({
+        day: day.day,
+        high: converter(day.high),
+        low: converter(day.low),
+        icon: day.icon
+      }));
+    }
+
+    if (this.state.siUnits === false) {
+      document.getElementById('deg-unit').innerHTML = '&#8451;';
+
+      this.setState({
+        currentTemp: toMetricTemp(this.state.currentTemp),
+        tempRange: toMetricTemp(this.state.tempRange),
+        weekWeather: weekHelper(this.state.weekWeather, toMetricTemp),
+        currentVisibility: {
+          value: toMetricDist(this.state.currentVisibility.value),
+          units: 'kilometers'
+        },
+        currentWind: {
+          value: toMetricDist(this.state.currentWind.value),
+          units: 'kph'
+        },
+        siUnits: true
+      });
+    } else {
+      document.getElementById('deg-unit').innerHTML = '&#8457;';
+
+      this.setState({
+        currentTemp: fromMetricTemp(this.state.currentTemp),
+        tempRange: fromMetricTemp(this.state.tempRange),
+        weekWeather: weekHelper(
+          this.state.weekWeather,
+          fromMetricTemp
+        ),
+        currentVisibility: {
+          value: fromMetricDist(this.state.currentVisibility.value),
+          units: 'miles'
+        },
+        currentWind: {
+          value: fromMetricDist(this.state.currentWind.value),
+          units: 'mph'
+        },
+        siUnits: false
+      });
+    }
   };
 
   render() {
@@ -185,11 +240,17 @@ class App extends Component {
     };
 
     const tempColor = (temp) => {
-      if (temp <= 32) {
+      let orig = temp;
+
+      if (this.state.siUnits) {
+        orig = fromMetricTemp(orig);
+      }
+      console.log(orig);
+      if (orig <= 32) {
         return '#00229E';
-      } else if (temp <= 60) {
+      } else if (orig <= 60) {
         return '#1CF20C';
-      } else if (temp <= 80) {
+      } else if (orig <= 80) {
         return '#EBA713';
       }
       return '#f26b18';
@@ -213,11 +274,12 @@ class App extends Component {
         </div>
         <WeatherBoxDisplay
           currentWeather={currentWeather}
+          tempRange={this.state.tempRange}
           weekWeather={this.state.weekWeather}
           tempColor={currentTempColor}
           currentIconOptions={this.state.currentIconOptions}
           handleLocationChange={this._handleLocationChange}
-          handleTempSwitch={this._handleTempSwitch}
+          handleUnitSwitch={this._handleUnitSwitch}
           inputProps={inputProps}
         />
       </div>

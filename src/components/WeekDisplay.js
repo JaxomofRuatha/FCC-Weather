@@ -18,6 +18,4 @@ const WeekDisplay = props => (
   </div>
 );
 
-// moment(res.daily.data[i].time).format('ddd DD');
-
 export default WeekDisplay;
