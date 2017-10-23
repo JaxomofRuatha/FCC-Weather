@@ -6,8 +6,7 @@ body {
 
 form {
   height: 2rem;
-  padding: 0.5rem 0;
-  width: 50vw; }
+  padding: 0.5rem 0; }
 
 button {
   background: #0b0682;
@@ -23,7 +22,7 @@ button {
 sup:hover {
   cursor: pointer;
   color: #edf4ff;
-  transition: all 0.2s; }
+  transition: color 0.2s; }
 
 .flex-cent-row {
   display: flex;

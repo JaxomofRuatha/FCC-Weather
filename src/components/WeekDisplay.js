@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactAnimatedWeather from 'react-animated-weather';
+import PropTypes from 'prop-types';
 
 const WeekDisplay = props => (
   <div className="flex-cent-row week-display">
-    {props.weekWeather.map((val, index, arr) => (
+    {props.weekWeather.map((val, index) => (
       <div className="flex-cent-col">
         <span>{props.weekWeather[index].day}</span>
         <ReactAnimatedWeather
@@ -17,5 +18,14 @@ const WeekDisplay = props => (
     ))}
   </div>
 );
+
+WeekDisplay.propTypes = {
+  weekWeather: PropTypes.arrayOf(PropTypes.shape({
+    day: PropTypes.string,
+    high: PropTypes.number,
+    low: PropTypes.number,
+    icon: PropTypes.string
+  })).isRequired
+};
 
 export default WeekDisplay;

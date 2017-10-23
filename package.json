@@ -1,8 +1,8 @@
 {
-  "name": "local-weather",
+  "name": "jor-local-weather",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://jaxomofruatha.github.io/FCC-Weather/",
+  "homepage": "https://jaxomofruatha.github.io/fcc-weather/",
   "dependencies": {
     "gh-pages": "^1.0.0",
     "moment": "^2.19.1",
@@ -12,7 +12,9 @@
     "react-animated-weather": "^1.0.3",
     "react-dom": "^16.0.0",
     "react-places-autocomplete": "^5.4.3",
-    "react-scripts": "1.0.14"
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.14",
+    "react-transition-group": "^2.2.1"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.1",
@@ -20,9 +22,9 @@
     "css-loader": "^0.28.7",
     "enzyme": "^3.1.0",
     "eslint": "^4.9.0",
-    "eslint-config-airbnb": "^16.0.0",
+    "eslint-config-airbnb": "^16.1.0",
     "eslint-loader": "^1.9.0",
-    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
     "gulp": "^3.9.1",

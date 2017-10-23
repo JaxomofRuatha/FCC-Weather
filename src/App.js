@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import moment from 'moment';
+import { Switch, Route } from 'react-router-dom';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
 import 'normalize.css';
 import './css/style.css';
 
 import WeatherBoxDisplay from './components/WeatherBoxDisplay';
+import TitleTime from './components/TitleTime';
+import LocationSelect from './components/LocationSelect';
 
 import apiSkeleton from './utils/api-helpers';
 import iconOptions from './utils/icon-options';
@@ -51,6 +54,10 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this._getLocalCoords();
+  }
+
+  _getLocalCoords = () => {
     // If browser geolocation is enabled, set coordinates in state.
 
     if (navigator.geolocation) {
@@ -122,7 +129,7 @@ class App extends Component {
   };
 
   _onForecastFail = (err) => {
-    // TODO: New error handling!
+    throw err;
   };
 
   _getReverseGeolocation = (latitude, longitude) => {
@@ -145,17 +152,15 @@ class App extends Component {
   };
 
   _onReverseGeolocationFail = (err) => {
-    // TODO: New error handling!
+    throw err;
   };
 
   _handleWeatherUpdate = (currentIcon) => {
-    console.log(currentIcon);
     this.setState(
       {
         currentIconOptions: iconOptions(currentIcon)
       },
       () => {
-        console.log('state:', this.state);
         document.body.style.background = `url(${this.state.currentIconOptions.background}) no-repeat center center fixed`;
         document.body.style.backgroundSize = 'cover';
       }
@@ -175,7 +180,7 @@ class App extends Component {
         this._getForecast(coords.lat, coords.lng);
         this._getReverseGeolocation(coords.lat, coords.lng);
       })
-      .catch(err => console.error(err));
+      .catch((err) => { throw err; });
   };
 
   _handleUnitSwitch = () => {
@@ -245,7 +250,6 @@ class App extends Component {
       if (this.state.siUnits) {
         orig = fromMetricTemp(orig);
       }
-      console.log(orig);
       if (orig <= 32) {
         return '#00229E';
       } else if (orig <= 60) {
@@ -266,22 +270,35 @@ class App extends Component {
 
     return (
       <div className="app-container">
-        <div className="title-time">
-          <span>{`${moment().format('MMMM')} ${moment().format('Do')}, ${moment().format('YYYY')}`}
-          </span>
-          <h1>{this.state.currentLocation}</h1>
-          <span>{moment().format('hh:mm A')}</span>
-        </div>
-        <WeatherBoxDisplay
-          currentWeather={currentWeather}
-          tempRange={this.state.tempRange}
-          weekWeather={this.state.weekWeather}
-          tempColor={currentTempColor}
-          currentIconOptions={this.state.currentIconOptions}
-          handleLocationChange={this._handleLocationChange}
-          handleUnitSwitch={this._handleUnitSwitch}
-          inputProps={inputProps}
-        />
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={props => (
+              <LocationSelect
+                handleLocationChange={this._handleLocationChange}
+                inputProps={inputProps}
+              />
+          )}
+          />
+          <Route
+            exact
+            path="/:curLocation"
+            render={props => (
+              <div className="main-wrapper">
+                <TitleTime currentLocation={this.state.currentLocation} />
+                <WeatherBoxDisplay
+                  currentWeather={currentWeather}
+                  tempRange={this.state.tempRange}
+                  weekWeather={this.state.weekWeather}
+                  tempColor={currentTempColor}
+                  currentIconOptions={this.state.currentIconOptions}
+                  handleUnitSwitch={this._handleUnitSwitch}
+                />
+              </div>
+          )}
+          />
+        </Switch>
       </div>
     );
   }
