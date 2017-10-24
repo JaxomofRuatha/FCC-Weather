@@ -38,6 +38,7 @@ class App extends Component {
         value: 0,
         units: 'mph'
       },
+      currentCoords: {},
       currentLocation: '',
       formLocation: '',
       currentSummary: '',
@@ -53,24 +54,20 @@ class App extends Component {
     };
   }
 
-  componentDidMount() {
-    this._getLocalCoords();
-  }
-
   _getLocalCoords = () => {
     // If browser geolocation is enabled, set coordinates in state.
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          this._getForecast(
-            position.coords.latitude,
-            position.coords.longitude
-          );
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
 
-          this._getReverseGeolocation(
-            position.coords.latitude,
-            position.coords.longitude
+          this._getForecast(lat, lng);
+          this._getReverseGeolocation(lat, lng);
+
+          this.setState(
+            { currentCoords: { lat, lng } }
           );
         },
 
@@ -82,14 +79,17 @@ class App extends Component {
             .then((res) => {
               const location = res.loc.split(',');
               this._getForecast(location[0], location[1]);
+              this.setState(
+                { currentCoords: { lat: location[0], lng: location[1] } }
+              );
             });
         }
       );
     }
   }
 
-  _getForecast = (latitude, longitude) => {
-    const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/86c75ecb51f9869d11c2dcfb869d069a/${latitude},${longitude}`;
+  _getForecast = (lat, lng) => {
+    const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/86c75ecb51f9869d11c2dcfb869d069a/${lat},${lng}`;
 
     apiSkeleton(url, apiOpts, this._onForecastSuccess, this._onForecastFail);
   };
@@ -132,8 +132,8 @@ class App extends Component {
     throw err;
   };
 
-  _getReverseGeolocation = (latitude, longitude) => {
-    const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyB2mV9wU6kQ4pTU-MFS1vUSRaAilCXorxA`;
+  _getReverseGeolocation = (lat, lng) => {
+    const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyB2mV9wU6kQ4pTU-MFS1vUSRaAilCXorxA`;
 
     apiSkeleton(
       url,
@@ -143,8 +143,8 @@ class App extends Component {
     );
   };
 
-  _onReverseGeolocationSuccess = (response) => {
-    const currentLocation = response.results[2].formatted_address;
+  _onReverseGeolocationSuccess = (res) => {
+    const currentLocation = res.results[2].formatted_address;
 
     this.setState({
       currentLocation
@@ -173,10 +173,17 @@ class App extends Component {
 
   _handleLocationChange = (e) => {
     e.preventDefault();
+    console.log("I AM RUNNING");
 
     geocodeByAddress(this.state.formLocation)
       .then(results => getLatLng(results[0]))
       .then((coords) => {
+        this.setState({
+          currentCoords: {
+            lat: coords.lat,
+            lng: coords.lat
+          }
+        });
         this._getForecast(coords.lat, coords.lng);
         this._getReverseGeolocation(coords.lat, coords.lng);
       })
@@ -272,18 +279,19 @@ class App extends Component {
       <div className="app-container">
         <Switch>
           <Route
-            exact
+            exact  
             path="/"
             render={props => (
               <LocationSelect
+                getLocalCoords={this._getLocalCoords}  
                 handleLocationChange={this._handleLocationChange}
                 inputProps={inputProps}
+                currentCoords={this.state.currentCoords}
               />
           )}
           />
           <Route
-            exact
-            path="/:curLocation"
+            path="/:locationId"
             render={props => (
               <div className="main-wrapper">
                 <TitleTime currentLocation={this.state.currentLocation} />

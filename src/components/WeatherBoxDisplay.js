@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import CurrentWeatherDisplay from './CurrentWeatherDisplay';
 import WeekDisplay from './WeekDisplay';
@@ -15,7 +16,9 @@ const WeatherBoxDisplay = props => (
       handleUnitSwitch={props.handleUnitSwitch}
     />
     <WeekDisplay weekWeather={props.weekWeather} />
-    <button>Change current location</button>
+    <Link to="/">
+      <button>Change current location</button>
+    </Link>  
   </div>
 );
 
