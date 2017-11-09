@@ -66,9 +66,7 @@ class App extends Component {
           this._getForecast(lat, lng);
           this._getReverseGeolocation(lat, lng);
 
-          this.setState(
-            { currentCoords: { lat, lng } }
-          );
+          this.setState({ currentCoords: { lat, lng } });
         },
 
         // If geolocation fails, query ipinfo.io
@@ -79,9 +77,7 @@ class App extends Component {
             .then((res) => {
               const location = res.loc.split(',');
               this._getForecast(location[0], location[1]);
-              this.setState(
-                { currentCoords: { lat: location[0], lng: location[1] } }
-              );
+              this.setState({ currentCoords: { lat: location[0], lng: location[1] } });
             });
         }
       );
@@ -173,7 +169,6 @@ class App extends Component {
 
   _handleLocationChange = (e) => {
     e.preventDefault();
-    console.log("I AM RUNNING");
 
     geocodeByAddress(this.state.formLocation)
       .then(results => getLatLng(results[0]))
@@ -279,11 +274,11 @@ class App extends Component {
       <div className="app-container">
         <Switch>
           <Route
-            exact  
+            exact
             path="/"
-            render={props => (
+            render={() => (
               <LocationSelect
-                getLocalCoords={this._getLocalCoords}  
+                getLocalCoords={this._getLocalCoords}
                 handleLocationChange={this._handleLocationChange}
                 inputProps={inputProps}
                 currentCoords={this.state.currentCoords}
@@ -292,7 +287,7 @@ class App extends Component {
           />
           <Route
             path="/:locationId"
-            render={props => (
+            render={() => (
               <div className="main-wrapper">
                 <TitleTime currentLocation={this.state.currentLocation} />
                 <WeatherBoxDisplay

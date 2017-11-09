@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import PlacesAutocomplete from 'react-places-autocomplete';
 
-// TODO: Hook up _getWeather to "See my local weather!", change route to "/local"
+// X TODO: Hook up _getWeather to "See my local weather!", change route to "/local"
+// -Need to get this to work when visiting route directly also
 // TODO: Have the route params be the coordinates, allow match to run _getWeather from param coords
-// TODO: Have default background whenever going to change location and initial landing
-// TODO: Not found page
+// X TODO: Have default background whenever going to change location and initial landing
+// TODO: Not found page/redirect
 // TODO: Styling for autocomplete and landing page, responsive for both (emotion.js? Loading icon and animations between routes?)
 // TODO: Add keys to weekly weather
-
-// AWARE: Might need to bind "this" for autocomplete
 
 /*
   1. New visitor should see landing page with root URL, initial state should mount in the background
@@ -21,7 +20,9 @@ import PlacesAutocomplete from 'react-places-autocomplete';
 
 const LocationSelect = props => (
   <div className="location-select">
-    <Link to="/local" onClick={props.getLocalCoords}>See my local weather!</Link>
+    <Link to="/local" onClick={props.getLocalCoords}>
+      <button>See my local weather!</button>
+    </Link>
     <form className="flex-cent-row" onSubmit={props.handleLocationChange}>
       <PlacesAutocomplete
         inputProps={props.inputProps}
@@ -35,11 +36,16 @@ const LocationSelect = props => (
           }
         }}
       />
-      <Link to={"/333,333"}>
-        <button type="submit">Go there!</button>
-      </Link>
+      <button type="submit">Go there!</button>
     </form>
   </div>
 );
+
+LocationSelect.propTypes = {
+  getLocalCoords: PropTypes.func.isRequired,
+  handleLocationChange: PropTypes.func.isRequired,
+  inputProps: PropTypes.object,
+  currentCoords: PropTypes.objectOf(PropTypes.number)
+};
 
 export default LocationSelect;
