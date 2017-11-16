@@ -16,7 +16,7 @@ const WeatherBoxDisplay = props => (
       handleUnitSwitch={props.handleUnitSwitch}
     />
     <WeekDisplay weekWeather={props.weekWeather} />
-    <Link href="/">
+    <Link to="/">
       Change current location
     </Link>
   </div>
