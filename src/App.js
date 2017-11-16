@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, withRouter } from 'react-router-dom';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
 import 'normalize.css';
@@ -12,7 +12,12 @@ import LocationSelect from './components/LocationSelect';
 
 import apiSkeleton from './utils/api-helpers';
 import iconOptions from './utils/icon-options';
-import { toMetricTemp, fromMetricTemp, toMetricDist, fromMetricDist } from './utils/unit-converters';
+import {
+  toMetricTemp,
+  fromMetricTemp,
+  toMetricDist,
+  fromMetricDist
+} from './utils/unit-converters';
 
 const apiOpts = {
   cache: 'default',
@@ -20,7 +25,7 @@ const apiOpts = {
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded'
   },
-  method: 'GET',
+  method: 'GET'
 };
 
 class App extends Component {
@@ -77,12 +82,14 @@ class App extends Component {
             .then((res) => {
               const location = res.loc.split(',');
               this._getForecast(location[0], location[1]);
-              this.setState({ currentCoords: { lat: location[0], lng: location[1] } });
+              this.setState({
+                currentCoords: { lat: location[0], lng: location[1] }
+              });
             });
         }
       );
     }
-  }
+  };
 
   _getForecast = (lat, lng) => {
     const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/86c75ecb51f9869d11c2dcfb869d069a/${lat},${lng}`;
@@ -117,7 +124,10 @@ class App extends Component {
           units: 'miles'
         },
         currentIcon: res.currently.icon,
-        tempRange: [Math.floor(res.daily.data[0].temperatureLow), Math.floor(res.daily.data[0].temperatureHigh)],
+        tempRange: [
+          Math.floor(res.daily.data[0].temperatureLow),
+          Math.floor(res.daily.data[0].temperatureHigh)
+        ],
         weekWeather
       },
       this._handleWeatherUpdate(res.currently.icon)
@@ -157,7 +167,8 @@ class App extends Component {
         currentIconOptions: iconOptions(currentIcon)
       },
       () => {
-        document.body.style.background = `url(${this.state.currentIconOptions.background}) no-repeat center center fixed`;
+        document.body.style.background = `url(${this.state.currentIconOptions
+          .background}) no-repeat center center fixed`;
         document.body.style.backgroundSize = 'cover';
       }
     );
@@ -173,16 +184,25 @@ class App extends Component {
     geocodeByAddress(this.state.formLocation)
       .then(results => getLatLng(results[0]))
       .then((coords) => {
-        this.setState({
-          currentCoords: {
-            lat: coords.lat,
-            lng: coords.lat
+        this.setState(
+          {
+            currentCoords: {
+              lat: coords.lat,
+              lng: coords.lng
+            }
+          },
+          () => {
+            const { lat } = this.state.currentCoords;
+            const { lng } = this.state.currentCoords;
+            this._getForecast(lat, lng);
+            this._getReverseGeolocation(lat, lng);
+            this.props.history.push(`./${lat},${lng}`);
           }
-        });
-        this._getForecast(coords.lat, coords.lng);
-        this._getReverseGeolocation(coords.lat, coords.lng);
+        );
       })
-      .catch((err) => { throw err; });
+      .catch((err) => {
+        throw err;
+      });
   };
 
   _handleUnitSwitch = () => {
@@ -218,10 +238,7 @@ class App extends Component {
       this.setState({
         currentTemp: fromMetricTemp(this.state.currentTemp),
         tempRange: fromMetricTemp(this.state.tempRange),
-        weekWeather: weekHelper(
-          this.state.weekWeather,
-          fromMetricTemp
-        ),
+        weekWeather: weekHelper(this.state.weekWeather, fromMetricTemp),
         currentVisibility: {
           value: fromMetricDist(this.state.currentVisibility.value),
           units: 'miles'
@@ -283,10 +300,11 @@ class App extends Component {
                 inputProps={inputProps}
                 currentCoords={this.state.currentCoords}
               />
-          )}
+            )}
           />
           <Route
-            path="/:locationId"
+            exact
+            path="/local"
             render={() => (
               <div className="main-wrapper">
                 <TitleTime currentLocation={this.state.currentLocation} />
@@ -299,7 +317,32 @@ class App extends Component {
                   handleUnitSwitch={this._handleUnitSwitch}
                 />
               </div>
-          )}
+              )
+            }
+          />
+          <Route
+            exact
+            path="/:locationId"
+            render={({ match }) => {
+              const newCoords = {
+                lat: match.params.locationId.split(',')[0],
+                lng: match.params.locationId.split(',')[1]
+              };
+              this.setState({ currentCoords: newCoords });
+              return (
+                <div className="main-wrapper">
+                  <TitleTime currentLocation={this.state.currentLocation} />
+                  <WeatherBoxDisplay
+                    currentWeather={currentWeather}
+                    tempRange={this.state.tempRange}
+                    weekWeather={this.state.weekWeather}
+                    tempColor={currentTempColor}
+                    currentIconOptions={this.state.currentIconOptions}
+                    handleUnitSwitch={this._handleUnitSwitch}
+                  />
+                </div>
+              );
+            }}
           />
         </Switch>
       </div>
@@ -307,4 +350,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withRouter(App);
