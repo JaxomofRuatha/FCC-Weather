@@ -188,11 +188,7 @@ class App extends Component {
           {
             currentCoords: {
               lat: coords.lat,
-<<<<<<< HEAD
               lng: coords.lng
-=======
-              lng: coords.lat
->>>>>>> 4b03ddc34778a9b30303fee5dc6ab27ddc8047f3
             }
           },
           () => {
@@ -321,7 +317,6 @@ class App extends Component {
                   handleUnitSwitch={this._handleUnitSwitch}
                 />
               </div>
-<<<<<<< HEAD
               )
             }
           />
@@ -348,9 +343,6 @@ class App extends Component {
                 </div>
               );
             }}
-=======
-            )}
->>>>>>> 4b03ddc34778a9b30303fee5dc6ab27ddc8047f3
           />
         </Switch>
       </div>
