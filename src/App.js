@@ -6,7 +6,7 @@ import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import 'normalize.css';
 import './css/style.css';
 
-import WeatherBoxDisplay from './components/WeatherBoxDisplay';
+import CurrentWeatherContainer from './containers/CurrentWeatherContainer';
 import TitleTime from './components/TitleTime';
 import LocationSelect from './components/LocationSelect';
 
@@ -82,6 +82,7 @@ class App extends Component {
             .then((res) => {
               const location = res.loc.split(',');
               this._getForecast(location[0], location[1]);
+              this._getReverseGeolocation(location[0], location[1]);
               this.setState({
                 currentCoords: { lat: location[0], lng: location[1] }
               });
@@ -308,17 +309,17 @@ class App extends Component {
             render={() => (
               <div className="main-wrapper">
                 <TitleTime currentLocation={this.state.currentLocation} />
-                <WeatherBoxDisplay
+                <CurrentWeatherContainer
                   currentWeather={currentWeather}
                   tempRange={this.state.tempRange}
                   weekWeather={this.state.weekWeather}
                   tempColor={currentTempColor}
                   currentIconOptions={this.state.currentIconOptions}
                   handleUnitSwitch={this._handleUnitSwitch}
+                  handleLocal={this._getLocalCoords}
                 />
               </div>
-              )
-            }
+            )}
           />
           <Route
             exact
@@ -328,17 +329,20 @@ class App extends Component {
                 lat: match.params.locationId.split(',')[0],
                 lng: match.params.locationId.split(',')[1]
               };
-              this.setState({ currentCoords: newCoords });
+              // this.setState({ currentCoords: newCoords });
               return (
                 <div className="main-wrapper">
                   <TitleTime currentLocation={this.state.currentLocation} />
-                  <WeatherBoxDisplay
+                  <CurrentWeatherContainer
                     currentWeather={currentWeather}
                     tempRange={this.state.tempRange}
                     weekWeather={this.state.weekWeather}
                     tempColor={currentTempColor}
                     currentIconOptions={this.state.currentIconOptions}
                     handleUnitSwitch={this._handleUnitSwitch}
+                    coords={newCoords}
+                    getForecast={this._getForecast}
+                    getReverseGeolocation={this._getReverseGeolocation}
                   />
                 </div>
               );
