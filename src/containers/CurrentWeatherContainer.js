@@ -27,7 +27,9 @@ class CurrentWeatherContainer extends Component {
           handleUnitSwitch={this.props.handleUnitSwitch}
         />
         <WeekDisplay weekWeather={this.props.weekWeather} />
-        <Link to="/">Change current location</Link>
+        <Link to="/" className="location-link">
+          Change current location
+        </Link>
       </div>
     );
   }

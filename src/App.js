@@ -271,7 +271,7 @@ class App extends Component {
         orig = fromMetricTemp(orig);
       }
       if (orig <= 32) {
-        return '#00229E';
+        return '#56FFBE';
       } else if (orig <= 60) {
         return '#1CF20C';
       } else if (orig <= 80) {

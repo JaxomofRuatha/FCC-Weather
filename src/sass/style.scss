@@ -3,18 +3,18 @@ $med-blue: #0b0682;
 $light-blue: #68a2ff;
 $white: #edf4ff;
 $glass: rgba(132, 154, 214, 0.35);
+$pastel-green: #3FBF74;
 
 body {
   box-sizing: border-box;
   text-align: center;
   font-family: 'Montserrat', sans-serif;
   overflow: hidden;
-  background: $light-blue;
+  background: $dark-blue;
 }
 
-form {
-  height: 2rem;
-  padding: 0.5rem 0;
+a {
+  color: $white;
 }
 
 sup:hover {
@@ -130,4 +130,44 @@ sup:hover {
       padding: 0.2rem 0;
     }
   }
+}
+
+.location-link {
+  background: $med-blue;
+  padding: 0.5rem 0;
+}
+
+.location-select {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  span {
+    color: $pastel-green;
+  }
+  form {
+    margin: 1rem auto;
+    height: 2rem;
+    width: 50rem;
+    padding: 0.5rem 0;
+  }
+}
+
+.local-button {
+  padding: 1rem 5rem;
+  margin: 1rem;
+  background: inherit;
+  border-radius: 10px;
+  border: 2px solid $light-blue;
+  color: $white;
+}
+
+.change-submit {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  margin-left: -1px;
+  border: 1px solid $light-blue;
+  background: $dark-blue;
+  color: $white;
+  padding: 10px;
+  cursor: pointer;
 }

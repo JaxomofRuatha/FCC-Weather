@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 const WeekDisplay = props => (
   <div className="flex-cent-row week-display">
     {props.weekWeather.map((val, index) => (
-      <div className="flex-cent-col">
+      <div className="flex-cent-col" key={index}>
         <span>{props.weekWeather[index].day}</span>
         <ReactAnimatedWeather
           color={props.weekWeather[index].icon.color}
