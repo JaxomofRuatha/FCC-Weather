@@ -16,13 +16,13 @@ const LocationSelect = props => (
       <button className="local-button">See my local weather!</button>
     </Link>
     <span>or</span>
-    <form className="flex-cent-row" onSubmit={props.handleLocationChange}>
+    <form className="autoForm" onSubmit={props.handleLocationChange}>
       <PlacesAutocomplete
         inputProps={props.inputProps}
         autocompleteItem={AutoCompleteItem}
         styles={{
           root: {
-            width: '40rem'
+            flex: 5
           },
           input: {
             background: 'inherit',
@@ -33,7 +33,7 @@ const LocationSelect = props => (
             'backgroundColor': '#020131',
             'color': '#EDF4FF',
             'border': '1px solid #68a2ff',
-            'margin-top': '-1px'
+            'marginTop': '-1px'
           },
           autocompleteItem: {
             backgroundColor: '#020131',

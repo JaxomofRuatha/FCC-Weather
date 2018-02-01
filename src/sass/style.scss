@@ -5,8 +5,11 @@ $white: #edf4ff;
 $glass: rgba(132, 154, 214, 0.35);
 $pastel-green: #3FBF74;
 
-body {
+*, *:after, *:before {
   box-sizing: border-box;
+}
+
+body {
   text-align: center;
   font-family: 'Montserrat', sans-serif;
   overflow: hidden;
@@ -147,7 +150,6 @@ sup:hover {
   form {
     margin: 1rem auto;
     height: 2rem;
-    width: 50rem;
     padding: 0.5rem 0;
   }
 }
@@ -168,6 +170,13 @@ sup:hover {
   border: 1px solid $light-blue;
   background: $dark-blue;
   color: $white;
-  padding: 10px;
   cursor: pointer;
+  padding: 10px;
+}
+
+.autoForm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
 }
