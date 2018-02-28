@@ -17,12 +17,12 @@ const CurrentWeatherDisplay = props => (
         <h1>{props.currentWeather.currentSummary}</h1>
         <div className="flex-cent-row">
           <div className="flex-cent-col">
-            <span style={{ color: 'darkblue' }}>{props.tempRange[0]}</span>
+            <span style={{ color: 'darkblue' }}>{props.tempRange && props.tempRange[0]}</span>
             <span className="temp-label">Low</span>
           </div>
           <div className="temp-gauge" />
           <div className="flex-cent-col">
-            <span style={{ color: 'darkred' }}>{props.tempRange[1]}</span>
+            <span style={{ color: 'darkred' }}>{props.tempRange && props.tempRange[1]}</span>
             <span className="temp-label">High</span>
           </div>
         </div>
