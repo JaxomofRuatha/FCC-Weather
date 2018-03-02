@@ -1,50 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactAnimatedWeather from 'react-animated-weather';
+import WeatherSummary from './WeatherSummary';
+import TempRange from './TempRange';
 
-const CurrentWeatherDisplay = props => (
+const CurrentWeatherDisplay = ({ currentWeather }) => (
   <div>
-    <div className="flex-cent-row weather-summary">
-      <div className="icon-temp">
-        <ReactAnimatedWeather
-          color={props.currentIconOptions.color}
-          icon={props.currentIconOptions.icon}
-          size={150}
-          animate
-        />
-      </div>
-      <div className="flex-cent-col weather-summary-title">
-        <h1>{props.currentWeather.currentSummary}</h1>
-        <div className="flex-cent-row">
-          <div className="flex-cent-col">
-            <span style={{ color: 'darkblue' }}>{props.tempRange[0]}</span>
-            <span className="temp-label">Low</span>
-          </div>
-          <div className="temp-gauge" />
-          <div className="flex-cent-col">
-            <span style={{ color: 'darkred' }}>{props.tempRange[1]}</span>
-            <span className="temp-label">High</span>
-          </div>
-        </div>
-      </div>
-      <div className="icon-temp" style={{ color: props.tempColor }}>
-        <h1>
-          {Math.round(props.currentWeather.currentTemp)}
-          <sup id="deg-unit" onClick={props.handleUnitSwitch}>
-            &#8457;
-          </sup>
-        </h1>
-      </div>
-    </div>
+    <WeatherSummary />
+    <TempRange />
     <div className="weather-lower">
       <span>
-        Wind: &nbsp;{`${props.currentWeather.currentWind.value} ${props.currentWeather.currentWind.units}`}&nbsp;|&nbsp; Humidity:
-        &nbsp;{Math.floor(props.currentWeather.currentHumidity * 100)}%
-        &nbsp;|&nbsp; Visibility: &nbsp;{`${props.currentWeather
-          .currentVisibility.value} ${props.currentWeather.currentVisibility
-          .units}`}
+        {`Wind: ${currentWeather.wind} | Humidity: ${Math.floor(currentWeather.humidity * 100)}% | Visibility: ${currentWeather.visibility}`}
       </span>
-      <span>{props.currentWeather.currentDaySummary}</span>
+      <span>{currentWeather.summary}</span>
     </div>
   </div>
 );

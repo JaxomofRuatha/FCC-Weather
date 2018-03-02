@@ -14,6 +14,9 @@ class CurrentWeatherContainer extends Component {
       this.props.getForecast(lat, lng);
       this.props.getReverseGeolocation(lat, lng);
     }
+    document.body.style.background = `url(${
+      this.props.current.icon.background
+    }) no-repeat center center fixed cover`;
   }
 
   render() {
@@ -23,7 +26,7 @@ class CurrentWeatherContainer extends Component {
           currentWeather={this.props.currentWeather}
           tempRange={this.props.tempRange}
           tempColor={this.props.tempColor}
-          currentIconOptions={this.props.currentIconOptions}
+          currentIconOptions={this.props.current.icon}
           handleUnitSwitch={this.props.handleUnitSwitch}
         />
         <WeekDisplay weekWeather={this.props.weekWeather} />
@@ -36,27 +39,15 @@ class CurrentWeatherContainer extends Component {
 }
 
 CurrentWeatherContainer.propTypes = {
-  currentWeather: PropTypes.shape({
-    currentTemp: PropTypes.number,
-    currentSummary: PropTypes.string,
-    currentDaySummary: PropTypes.string,
-    currentWind: PropTypes.string,
-    currentHumidity: PropTypes.string,
-    currentVisibility: PropTypes.string,
-    currentIcon: PropTypes.string
-  }).isRequired,
   tempColor: PropTypes.string,
-  currentIconOptions: PropTypes.objectOf(PropTypes.string),
   handleUnitSwitch: PropTypes.func.isRequired
 };
 
 CurrentWeatherContainer.defaultProps = {
-  tempColor: '#00229E',
-  currentIconOptions: {
-    icon: 'CLEAR_NIGHT',
-    color: '#FFFFFF',
-    background: ''
-  }
+  current: {
+    icon: {}
+  },
+  tempColor: '#00229E'
 };
 
 export default CurrentWeatherContainer;

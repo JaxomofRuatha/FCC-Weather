@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 
 const TitleTime = props => (
@@ -10,5 +11,9 @@ const TitleTime = props => (
     <span>{moment().format('hh:mm A')}</span>
   </div>
 );
+
+TitleTime.propTypes = {
+  currentLocation: PropTypes.string.isRequired
+};
 
 export default TitleTime;
