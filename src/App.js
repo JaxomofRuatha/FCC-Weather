@@ -88,22 +88,30 @@ class App extends Component {
           });
         }
 
-        this.setState({
-          current: Object.assign({}, this.state.current, {
-            temp: res.currently.temperature,
-            summary: res.currently.summary,
-            dayForecast: res.hourly.summary,
-            wind: `${res.currently.windSpeed} mph`,
-            humidity: res.currently.humidity,
-            visibility: `${res.currently.visibility} mi`,
-            icon: iconOptions(res.currently.icon)
-          }),
-          tempRange: [
-            Math.floor(res.daily.data[0].temperatureLow),
-            Math.floor(res.daily.data[0].temperatureHigh)
-          ],
-          weekWeather
-        });
+        this.setState(
+          {
+            current: Object.assign({}, this.state.current, {
+              temp: res.currently.temperature,
+              summary: res.currently.summary,
+              dayForecast: res.hourly.summary,
+              wind: `${res.currently.windSpeed} mph`,
+              humidity: res.currently.humidity,
+              visibility: `${res.currently.visibility} mi`,
+              icon: iconOptions(res.currently.icon)
+            }),
+            tempRange: [
+              Math.floor(res.daily.data[0].temperatureLow),
+              Math.floor(res.daily.data[0].temperatureHigh)
+            ],
+            weekWeather
+          },
+          () => {
+            document.body.style.background = `url(${
+              this.state.current.icon.background
+            }) no-repeat center center fixed`;
+            document.body.style.backgroundSize = 'cover';
+          }
+        );
       })
       .catch((err) => {
         throw err;
@@ -115,7 +123,9 @@ class App extends Component {
 
     apiSkeleton(url, apiOpts)
       .then((res) => {
-        const currentLocation = res.results[2].formatted_address;
+        const currentLocation = `${
+          res.results[2].address_components[0].long_name
+        }, ${res.results[2].address_components[2].long_name}`;
 
         this.setState({
           current: Object.assign({}, this.state.current, {

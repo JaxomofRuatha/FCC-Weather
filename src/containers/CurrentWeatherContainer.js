@@ -20,19 +20,6 @@ class CurrentWeatherContainer extends Component {
     }
   }
 
-  componentDidUpdate() {
-    if (this.props.currentWeather.icon) {
-      console.log(this.props.currentWeather.icon);
-      document.body.style.background = `url(${
-        this.props.currentWeather.icon.background
-      }) no-repeat center center fixed cover`;
-    }
-  }
-
-  componentWillUnmount() {
-    document.body.style.background = '#020131';
-  }
-
   render() {
     return (
       <main className="weather-display">

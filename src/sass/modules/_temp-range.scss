@@ -1,5 +1,6 @@
 .temp-range {
   @include flex-cent-r;
+  height: 2rem;
   span {
     display: block;
   }
