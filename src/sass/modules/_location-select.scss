@@ -1,0 +1,38 @@
+.location-select {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  span {
+    color: $pastel-green;
+  }
+  form {
+    margin: 1rem auto;
+    height: 2rem;
+    padding: 0.5rem 0;
+  }
+}
+
+.local-button {
+  padding: 1rem 5rem;
+  margin: 1rem;
+  background: inherit;
+  border-radius: 10px;
+  border: 2px solid $light-blue;
+  color: $white;
+}
+
+.auto-form {
+  @include flex-cent-r;
+  width: 80%;
+  &__submit {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-left: -1px;
+    border: 1px solid $light-blue;
+    background: $dark-blue;
+    color: $white;
+    cursor: pointer;
+    padding: 10px;
+  }
+}
+

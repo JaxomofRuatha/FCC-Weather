@@ -1,0 +1,19 @@
+.title-time {
+  @include flex-cent-c;
+  margin: 0 auto 1rem auto;
+  width: 80%;
+  background: $glass;
+  border: 4px solid $dark-blue;
+  &__location {
+    color: $white;
+    text-shadow: 1px 1px $dark-blue;
+    flex: 4
+  }
+  span {
+    width: 100%;
+    color: $light-blue;
+    background: $dark-blue;
+    padding: 0.3rem;
+    flex: 1;
+  }
+}

@@ -3,17 +3,28 @@ import PropTypes from 'prop-types';
 import WeatherSummary from './WeatherSummary';
 import TempRange from './TempRange';
 
-const CurrentWeatherDisplay = ({ currentWeather }) => (
-  <div>
-    <WeatherSummary />
-    <TempRange />
-    <div className="weather-lower">
+const CurrentWeatherDisplay = ({
+  currentWeather,
+  currentIconOptions,
+  tempRange,
+  handleUnitSwitch,
+  tempColor
+}) => (
+  <React.Fragment>
+    <WeatherSummary
+      currentIconOptions={currentIconOptions}
+      currentWeather={currentWeather}
+      handleUnitSwitch={handleUnitSwitch}
+      tempColor={tempColor}
+    />
+    <TempRange tempRange={tempRange} />
+    <section className="info-divider">
       <span>
         {`Wind: ${currentWeather.wind} | Humidity: ${Math.floor(currentWeather.humidity * 100)}% | Visibility: ${currentWeather.visibility}`}
       </span>
-      <span>{currentWeather.summary}</span>
-    </div>
-  </div>
+      <span>{currentWeather.dayForecast}</span>
+    </section>
+  </React.Fragment>
 );
 
 CurrentWeatherDisplay.propTypes = {

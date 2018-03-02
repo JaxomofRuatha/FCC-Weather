@@ -36,6 +36,16 @@ class App extends Component {
     };
   }
 
+  _setCoords = (lat, lng, handler) => {
+    this.setState({ currentCoords: { lat, lng } }, () => {
+      this._getForecast(lat, lng);
+      this._getReverseGeolocation(lat, lng);
+      if (handler) {
+        handler();
+      }
+    });
+  };
+
   _getLocalCoords = () => {
     // If browser geolocation is enabled, set coordinates in state.
 
@@ -45,7 +55,7 @@ class App extends Component {
           const lat = position.coords.latitude;
           const lng = position.coords.longitude;
 
-          this.setState({ currentCoords: { lat, lng } });
+          this._setCoords(lat, lng);
         },
 
         // If geolocation fails, query ipinfo.io to set the coordinates in state instead
@@ -54,9 +64,7 @@ class App extends Component {
           fetch('https://ipinfo.io/geo', apiOpts).then((res) => {
             const location = res.loc.split(',');
 
-            this.setState({
-              currentCoords: { lat: location[0], lng: location[1] }
-            });
+            this._setCoords(location[0], location[1]);
           });
         }
       );
@@ -81,15 +89,15 @@ class App extends Component {
         }
 
         this.setState({
-          current: {
+          current: Object.assign({}, this.state.current, {
             temp: res.currently.temperature,
             summary: res.currently.summary,
             dayForecast: res.hourly.summary,
             wind: `${res.currently.windSpeed} mph`,
             humidity: res.currently.humidity,
-            visibility: `${res.currently.visibility} miles`,
+            visibility: `${res.currently.visibility} mi`,
             icon: iconOptions(res.currently.icon)
-          },
+          }),
           tempRange: [
             Math.floor(res.daily.data[0].temperatureLow),
             Math.floor(res.daily.data[0].temperatureHigh)
@@ -110,9 +118,9 @@ class App extends Component {
         const currentLocation = res.results[2].formatted_address;
 
         this.setState({
-          current: {
+          current: Object.assign({}, this.state.current, {
             location: currentLocation
-          }
+          })
         });
       })
       .catch((err) => {
@@ -131,21 +139,10 @@ class App extends Component {
     geocodeByAddress(this.state.formLocation)
       .then(results => getLatLng(results[0]))
       .then((coords) => {
-        this.setState(
-          {
-            currentCoords: {
-              lat: coords.lat,
-              lng: coords.lng
-            }
-          },
-          () => {
-            const { lat } = this.state.currentCoords;
-            const { lng } = this.state.currentCoords;
-            this._getForecast(lat, lng);
-            this._getReverseGeolocation(lat, lng);
-            this.props.history.push(`./${lat},${lng}`);
-          }
-        );
+        this._setCoords(coords.lat, coords.lng, () => {
+          const { lat, lng } = this.state.currentCoords;
+          this.props.history.push(`./${lat},${lng}`);
+        });
       })
       .catch((err) => {
         throw err;
@@ -162,15 +159,18 @@ class App extends Component {
       }));
     }
 
+    const windValue = this.state.current.wind.slice(0, -4);
+    const visValue = this.state.current.visibility.slice(0, -3);
+
     if (this.state.siUnits === false) {
       document.getElementById('deg-unit').innerHTML = '&#8451;';
 
       this.setState({
-        current: {
+        current: Object.assign({}, this.state.current, {
           temp: toMetricTemp(this.state.currentTemp),
-          wind: `${toMetricDist(this.state.currentWind.value)} kph`,
-          visibility: `${toMetricDist(this.state.currentVisibility.value)} kilometers`
-        },
+          wind: `${toMetricDist(Number(windValue))} kph`,
+          visibility: `${toMetricDist(Number(visValue))} km`
+        }),
         tempRange: toMetricTemp(this.state.tempRange),
         weekWeather: weekHelper(this.state.weekWeather, toMetricTemp),
         siUnits: true
@@ -179,14 +179,14 @@ class App extends Component {
       document.getElementById('deg-unit').innerHTML = '&#8457;';
 
       this.setState({
-        current: {
+        current: Object.assign({}, this.state.current, {
           temp: fromMetricTemp(this.state.currentTemp),
-          wind: `${fromMetricDist(this.state.currentWind.value)} kph`,
-          visibility: `${fromMetricDist(this.state.currentVisibility.value)} kilometers`
-        },
+          wind: `${fromMetricDist(Number(windValue))} mph`,
+          visibility: `${fromMetricDist(Number(visValue))} mi`
+        }),
         tempRange: fromMetricTemp(this.state.tempRange),
         weekWeather: weekHelper(this.state.weekWeather, fromMetricTemp),
-        siUnits: true
+        siUnits: false
       });
     }
   };
@@ -221,64 +221,65 @@ class App extends Component {
     };
 
     return (
-      <div className="app-container">
-        <Switch>
-          <Route
-            exact
-            path="/"
-            render={() => (
-              <LocationSelect
-                getLocalCoords={this._getLocalCoords}
-                inputProps={inputProps}
+      <Switch>
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <LocationSelect
+              getLocalCoords={this._getLocalCoords}
+              inputProps={inputProps}
+              currentCoords={this.state.currentCoords}
+            />
+          )}
+        />
+        <Route
+          exact
+          path="/local"
+          render={() => (
+            <React.Fragment>
+              <TitleTime currentLocation={this.state.current.location} />
+              <CurrentWeatherContainer
+                currentWeather={this.state.current}
+                tempRange={this.state.tempRange}
+                weekWeather={this.state.weekWeather}
+                tempColor={currentTempColor}
+                handleUnitSwitch={this._handleUnitSwitch}
+                handleLocal={this._getLocalCoords}
                 currentCoords={this.state.currentCoords}
               />
-            )}
-          />
-          <Route
-            exact
-            path="/local"
-            render={() => (
-              <div className="main-wrapper">
-                <TitleTime currentLocation={this.state.currentLocation} />
+            </React.Fragment>
+          )}
+        />
+        <Route
+          exact
+          path="/:locationId"
+          render={({ match }) => {
+            const newCoords = {
+              lat: match.params.locationId.split(',')[0],
+              lng: match.params.locationId.split(',')[1]
+            };
+
+            return (
+              <React.Fragment>
+                <TitleTime currentLocation={this.state.current.location} />
                 <CurrentWeatherContainer
+                  newCoords={newCoords}
+                  setCoords={this._setCoords}
+                  currentCoords={this.state.currentCoords}
                   currentWeather={this.state.current}
                   tempRange={this.state.tempRange}
                   weekWeather={this.state.weekWeather}
                   tempColor={currentTempColor}
                   handleUnitSwitch={this._handleUnitSwitch}
-                  handleLocal={this._getLocalCoords}
+                  getForecast={this._getForecast}
+                  getReverseGeolocation={this._getReverseGeolocation}
                 />
-              </div>
-            )}
-          />
-          <Route
-            exact
-            path="/:locationId"
-            render={({ match }) => {
-              const newCoords = {
-                lat: match.params.locationId.split(',')[0],
-                lng: match.params.locationId.split(',')[1]
-              };
-              // this.setState({ currentCoords: newCoords });
-              return (
-                <div className="main-wrapper">
-                  <TitleTime currentLocation={this.state.currentLocation} />
-                  <CurrentWeatherContainer
-                    currentWeather={this.state.current}
-                    tempRange={this.state.tempRange}
-                    weekWeather={this.state.weekWeather}
-                    tempColor={currentTempColor}
-                    handleUnitSwitch={this._handleUnitSwitch}
-                    coords={newCoords}
-                    getForecast={this._getForecast}
-                    getReverseGeolocation={this._getReverseGeolocation}
-                  />
-                </div>
-              );
-            }}
-          />
-        </Switch>
-      </div>
+              </React.Fragment>
+            );
+          }}
+        />
+      </Switch>
     );
   }
 }

@@ -11,12 +11,12 @@ const AutoCompleteItem = ({ formattedSuggestion }) => (
 );
 
 const LocationSelect = props => (
-  <div className="location-select">
+  <React.Fragment>
     <Link to="/local" onClick={props.getLocalCoords}>
       <button className="local-button">See my local weather!</button>
     </Link>
     <span>or</span>
-    <form className="autoForm" onSubmit={props.handleLocationChange}>
+    <form className="auto-form" onSubmit={props.handleLocationChange}>
       <PlacesAutocomplete
         inputProps={props.inputProps}
         autocompleteItem={AutoCompleteItem}
@@ -30,10 +30,10 @@ const LocationSelect = props => (
             border: '1px solid #68a2ff'
           },
           autocompleteContainer: {
-            'backgroundColor': '#020131',
-            'color': '#EDF4FF',
-            'border': '1px solid #68a2ff',
-            'marginTop': '-1px'
+            backgroundColor: '#020131',
+            color: '#EDF4FF',
+            border: '1px solid #68a2ff',
+            marginTop: '-1px'
           },
           autocompleteItem: {
             backgroundColor: '#020131',
@@ -46,7 +46,7 @@ const LocationSelect = props => (
           },
           googleLogoContainer: {
             backgroundColor: 'rgba(132, 154, 214, 0.35)',
-            paddiing: '0.5rem',
+            padding: '0.5rem',
             border: 'none'
           },
           googleLogoImage: {
@@ -54,11 +54,11 @@ const LocationSelect = props => (
           }
         }}
       />
-      <button type="submit" className="change-submit">
+      <button type="submit" className="auto-form__submit">
         Go there!
       </button>
     </form>
-  </div>
+  </React.Fragment>
 );
 
 LocationSelect.propTypes = {

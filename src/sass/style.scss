@@ -5,6 +5,8 @@ $white: #edf4ff;
 $glass: rgba(132, 154, 214, 0.35);
 $pastel-green: #3FBF74;
 
+@import './util/mixins';
+
 *, *:after, *:before {
   box-sizing: border-box;
 }
@@ -12,7 +14,6 @@ $pastel-green: #3FBF74;
 body {
   text-align: center;
   font-family: 'Montserrat', sans-serif;
-  overflow: hidden;
   background: $dark-blue;
 }
 
@@ -20,163 +21,25 @@ a {
   color: $white;
 }
 
-sup:hover {
-  cursor: pointer;
-  color: $white;
-  transition: color 0.2s;
+span {
+  display: block;
 }
 
-.flex-cent-row {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+@import './modules/location-select';
+@import './modules/title-time';
+@import './modules/weather-summary';
+@import './modules/temp-range';
+@import './modules/week-display';
 
-.flex-cent-col {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.app-container {
-  width: 100%;
-  margin-top: 2vh;
-  max-height: 90vh;
-}
-
-.title-time {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto 1em auto;
-  width: 80%;
-  background: $glass;
-  border: 4px solid $dark-blue;
-  h1 {
-    color: $white;
-    text-shadow: 1px 1px $dark-blue;
-  }
-  span {
-    width: 100%;
-    color: $light-blue;
-    background: $dark-blue;
-    padding: 0.3rem;
-  }
-}
-
-.weather-box-display {
+.weather-display {
   background: $glass;
   display: flex;
   flex-direction: column;
   padding: 20px 0;
-  form {
-    width: 100%;
-    background: $med-blue;
-  }
 }
 
-.weather-summary {
-  font-weight: bold;
-}
-
-.weather-summary-title h1 {
-  padding: 0 8rem;
-  font-size: 3.5rem;
-  color: $dark-blue;
-}
-
-.icon-temp {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 10rem;
-  width: 13rem;
-  font-size: 1.7rem;
-  background: $dark-blue;
-  border-radius: 25px;
-  padding: 1rem;
-}
-
-.weather-lower {
-  display: flex;
-  flex-direction: column;
-  margin: 1rem 0;
+.info-divider{
   color: $white;
-  & > span {
-    padding: 0.3rem;
-    width: 100%;
-    background: $med-blue;
-  }
-}
-
-.temp-gauge {
-  width: 15rem;
-  height: 0.5rem;
-  background: linear-gradient(to right, darkblue, darkred);
-  border-radius: 20px;
-  box-shadow: 1px 1px $dark-blue;
-  margin: 0 1rem;
-}
-
-.week-display {
-  padding-bottom: 1rem;
-  & > div {
-    background: $dark-blue;
-    padding: 0.2rem 1.5rem;
-    margin: 0 1.5rem;
-    border-radius: 10px;
-    color: $light-blue;
-    span {
-      padding: 0.2rem 0;
-    }
-  }
-}
-
-.location-link {
   background: $med-blue;
   padding: 0.5rem 0;
-}
-
-.location-select {
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  span {
-    color: $pastel-green;
-  }
-  form {
-    margin: 1rem auto;
-    height: 2rem;
-    padding: 0.5rem 0;
-  }
-}
-
-.local-button {
-  padding: 1rem 5rem;
-  margin: 1rem;
-  background: inherit;
-  border-radius: 10px;
-  border: 2px solid $light-blue;
-  color: $white;
-}
-
-.change-submit {
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-  margin-left: -1px;
-  border: 1px solid $light-blue;
-  background: $dark-blue;
-  color: $white;
-  cursor: pointer;
-  padding: 10px;
-}
-
-.autoForm {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 80%;
 }

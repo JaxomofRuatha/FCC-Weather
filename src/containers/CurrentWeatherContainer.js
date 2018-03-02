@@ -9,45 +9,51 @@ class CurrentWeatherContainer extends Component {
   componentDidMount() {
     if (this.props.handleLocal) {
       this.props.handleLocal();
-    } else if (this.props.coords) {
-      const { lat, lng } = this.props.coords;
+    }
+    if (this.props.newCoords) {
+      this.props.setCoords(this.props.newCoords.lat, this.props.newCoords.lng);
+    }
+    if (this.props.currentCoords) {
+      const { lat, lng } = this.props.currentCoords;
       this.props.getForecast(lat, lng);
       this.props.getReverseGeolocation(lat, lng);
     }
-    document.body.style.background = `url(${
-      this.props.current.icon.background
-    }) no-repeat center center fixed cover`;
+  }
+
+  componentDidUpdate() {
+    if (this.props.currentWeather.icon) {
+      console.log(this.props.currentWeather.icon);
+      document.body.style.background = `url(${
+        this.props.currentWeather.icon.background
+      }) no-repeat center center fixed cover`;
+    }
+  }
+
+  componentWillUnmount() {
+    document.body.style.background = '#020131';
   }
 
   render() {
     return (
-      <div className="weather-box-display">
+      <main className="weather-display">
         <CurrentWeatherDisplay
           currentWeather={this.props.currentWeather}
           tempRange={this.props.tempRange}
           tempColor={this.props.tempColor}
-          currentIconOptions={this.props.current.icon}
+          currentIconOptions={this.props.currentWeather.icon}
           handleUnitSwitch={this.props.handleUnitSwitch}
         />
         <WeekDisplay weekWeather={this.props.weekWeather} />
-        <Link to="/" className="location-link">
+        <Link to="/" className="info-divider">
           Change current location
         </Link>
-      </div>
+      </main>
     );
   }
 }
 
 CurrentWeatherContainer.propTypes = {
-  tempColor: PropTypes.string,
   handleUnitSwitch: PropTypes.func.isRequired
-};
-
-CurrentWeatherContainer.defaultProps = {
-  current: {
-    icon: {}
-  },
-  tempColor: '#00229E'
 };
 
 export default CurrentWeatherContainer;
