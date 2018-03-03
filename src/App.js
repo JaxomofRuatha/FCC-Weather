@@ -124,8 +124,8 @@ class App extends Component {
     apiSkeleton(url, apiOpts)
       .then((res) => {
         const currentLocation = `${
-          res.results[2].address_components[0].long_name
-        }, ${res.results[2].address_components[2].long_name}`;
+          res.results[3].address_components[0].long_name
+        }, ${res.results[3].address_components[2].long_name}`;
 
         this.setState({
           current: Object.assign({}, this.state.current, {
@@ -171,6 +171,9 @@ class App extends Component {
 
     const windValue = this.state.current.wind.slice(0, -4);
     const visValue = this.state.current.visibility.slice(0, -3);
+
+    const toggleSwitch = document.querySelector('.weather-summary__checkbox');
+    toggleSwitch.checked = !toggleSwitch.checked;
 
     if (this.state.siUnits === false) {
       document.getElementById('deg-unit').innerHTML = '&#8451;';

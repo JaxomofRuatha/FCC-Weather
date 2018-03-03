@@ -18,3 +18,73 @@
   border-radius: 25px;
   padding: 1rem;
 }
+
+.weather-summary__switch {
+  position: relative;
+  width: 55px;
+}
+
+.weather-summary__checkbox {
+  display: none;
+}
+
+.weather-summary__toggle {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid $pastel-green;
+  border-radius: 13px;
+}
+
+.weather-summary__toggle-inner {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+
+  &:before, &:after {
+    display: block;
+    float: left;
+    width: 50%;
+    height: 24px;
+    padding: 0;
+    line-height: 24px;
+    font-size: 14px;
+    color: $white;
+    font-weight: bold;
+  }
+
+  &:before {
+    content: "℉";
+    background-color: $dark-blue; color: $white;
+  }
+  
+  &:after {
+    content: "℃";
+    padding-right: 10px;
+    background-color: #68A2FF; color: #EDF4FF;
+    text-align: right;
+  }
+}
+
+.weather-summary__toggle-switch {
+    display: block;
+    width: 17px;
+    margin: 3.5px;
+    background: #EDF4FF;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 27px;
+    border: 2px solid #3FBF74;
+    border-radius: 13px;
+    transition: all 0.3s ease-in 0s; 
+}
+
+.weather-summary__checkbox:checked + .weather-summary__toggle .weather-summary__toggle-inner {
+  margin-left: 0
+}
+
+.weather-summary__checkbox:checked + .weather-summary__toggle .weather-summary__toggle-switch {
+  right: 0;
+}

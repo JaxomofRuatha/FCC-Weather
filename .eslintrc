@@ -1,49 +1,36 @@
 {
-    "extends": "airbnb",
-    "parser": "babel-eslint",
-    "env": {
-        "browser": true,
-        "node": true,
-        "mocha": true
-    },
-    "plugins": [
-        "react",
-        "import"
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "node": true,
+    "mocha": true
+  },
+  "plugins": ["react", "import"],
+  "rules": {
+    "max-len": [
+      0,
+      {
+        "ignoreUrls": true
+      }
     ],
-    "rules": {
-        "max-len": [
-            0,
-            {
-                "ignoreUrls": true
-            }
-        ],
-        "react/jsx-filename-extension": [
-            1,
-            {
-                "extensions": [
-                    ".js",
-                    ".jsx"
-                ]
-            }
-        ],
-        "jsx-a11y/anchor-is-valid": [
-            2,
-            {
-                "components": ["Link"],
-                "specialLink": ["to"]
-            }
-        ],
-        "comma-dangle": [
-            "error",
-            "only-multiline"
-        ],
-        "quote-props": [
-            1,
-            "consistent"
-        ],
-        "no-underscore-dangle": [
-            0
-        ],
-        "no-plusplus": [0]
-    }
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [".js", ".jsx"]
+      }
+    ],
+    "jsx-a11y/anchor-is-valid": [
+      2,
+      {
+        "components": ["Link"],
+        "specialLink": ["to"]
+      }
+    ],
+    "comma-dangle": ["error", "only-multiline"],
+    "quote-props": [1, "consistent"],
+    "no-underscore-dangle": [0],
+    "no-plusplus": [0],
+    "no-mixed-operators": [0]
+  }
 }

@@ -2,10 +2,10 @@
   "name": "jor-local-weather",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://jaxomofruatha.github.io/fcc-weather/",
+  "homepage": "https://jaxomofruatha.github.io/jor-weather/",
   "dependencies": {
     "gh-pages": "^1.1.0",
-    "moment": "^2.20.1",
+    "moment": "^2.21.0",
     "normalize.css": "^8.0.0",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
@@ -19,27 +19,28 @@
   "devDependencies": {
     "babel-eslint": "^8.2.2",
     "babel-jest": "^22.4.1",
-    "chokidar": "^2.0.2",
     "css-loader": "^0.28.10",
     "enzyme": "^3.3.0",
-    "eslint": "^4.18.1",
+    "eslint": "^4.18.2",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-loader": "^2.0.0",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
-    "node-sass": "^4.7.2",
+    "node-sass-chokidar": "0.0.3",
+    "npm-run-all": "^4.1.2",
     "prettier-eslint": "^8.8.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start-react": "react-scripts start",
+    "start": "npm-run-all -p watch:sass start-react",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint --fix src",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "sass": "node-sass --output-style expanded --source-map true --source-map-embed true -o src/css src/sass/style.scss",
-    "watch:sass": "chokidar 'src/sass/**/*.scss' -c 'npm run sass'"
+    "sass": "node-sass-chokidar --output-style expanded --source-map true --source-map-embed true src/sass/style.scss -o src/css",
+    "watch:sass": "npm run sass && node-sass-chokidar src/sass/**/*.scss -o src/css --watch --recursive"
   }
 }

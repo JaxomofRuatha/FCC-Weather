@@ -22,14 +22,23 @@ const WeatherSummary = props => (
     >
       <h1>
         {Math.round(props.currentWeather.temp)}
-        <sup>&#8457;</sup>
+        <sup id="deg-unit">&#8457;</sup>
       </h1>
-      <button
-        className="weather-summary__units"
-        onClick={props.handleUnitSwitch}
-      >
-        &#8457; / &#8451;
-      </button>
+      <div className="weather-summary__switch" onClick={props.handleUnitSwitch}>
+        <input
+          type="checkbox"
+          className="weather-summary__checkbox"
+          id="weather-summary__checkbox"
+          checked
+        />
+        <label
+          className="weather-summary__toggle"
+          htmlFor="weather-summary__checkbox"
+        >
+          <span className="weather-summary__toggle-inner" />
+          <span className="weather-summary__toggle-switch" />
+        </label>
+      </div>
     </article>
   </section>
 );
