@@ -1,27 +1,43 @@
+function toCelsius(val) {
+  return Math.round((val - 32) * (5 / 9));
+}
+
+function toFahrenheit(val) {
+  return Math.round(val * (9 / 5) + 32);
+}
+
+function toKilometers(val) {
+  return Math.round(val * 1.6);
+}
+
+function toMiles(val) {
+  return Math.round(val * 0.6);
+}
+
 export function toMetricTemp(temps) {
   if (Array.isArray(temps)) {
-    return temps.map(val => Math.round(val - 32) * (5 / 9));
+    return temps.map(val => toCelsius(val));
   }
-  return Math.round((temps - 32) * (5 / 9));
+  return toCelsius(temps);
 }
 
 export function fromMetricTemp(temps) {
   if (Array.isArray(temps)) {
-    return temps.map(val => Math.round(val * (9 / 5) + 32));
+    return temps.map(val => toFahrenheit(val));
   }
-  return Math.round(temps * (9 / 5) + 32);
+  return toFahrenheit(temps);
 }
 
 export function toMetricDist(dists) {
   if (Array.isArray(dists)) {
-    return dists.map(val => Math.round(val * 1.6));
+    return dists.map(val => toKilometers(val));
   }
-  return Math.round(dists * 1.6);
+  return toKilometers(dists);
 }
 
 export function fromMetricDist(dists) {
   if (Array.isArray(dists)) {
-    return dists.map(val => Math.round(val * 0.6));
+    return dists.map(val => toMiles(val));
   }
-  return Math.round(dists * 0.6);
+  return toMiles(dists);
 }
