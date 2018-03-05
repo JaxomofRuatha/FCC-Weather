@@ -5,18 +5,16 @@ import { Link } from 'react-router-dom';
 import CurrentWeatherDisplay from '../components/CurrentWeatherDisplay';
 import WeekDisplay from '../components/WeekDisplay';
 
+import { fetchLocalCoords } from '../lib/api';
+
 class CurrentWeatherContainer extends Component {
-  componentDidMount() {
-    if (this.props.handleLocal) {
-      this.props.handleLocal();
-    }
+  async componentDidMount() {
     if (this.props.newCoords) {
-      this.props.setCoords(this.props.newCoords.lat, this.props.newCoords.lng);
-    }
-    if (this.props.currentCoords) {
-      const { lat, lng } = this.props.currentCoords;
-      this.props.getForecast(lat, lng);
-      this.props.getReverseGeolocation(lat, lng);
+      this.props.setCoords(this.props.newCoords);
+    } else {
+      const newCoords = await fetchLocalCoords();
+      console.log(newCoords);
+      this.props.setCoords(newCoords);
     }
   }
 

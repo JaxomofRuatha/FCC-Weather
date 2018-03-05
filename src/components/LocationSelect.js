@@ -12,7 +12,7 @@ const AutoCompleteItem = ({ formattedSuggestion }) => (
 
 const LocationSelect = props => (
   <React.Fragment>
-    <Link to="/local" onClick={props.getLocalCoords}>
+    <Link to="/local">
       <button className="local-button">See my local weather!</button>
     </Link>
     <span>or</span>

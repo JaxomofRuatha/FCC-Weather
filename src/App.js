@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import moment from 'moment';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
@@ -10,199 +9,185 @@ import CurrentWeatherContainer from './containers/CurrentWeatherContainer';
 import TitleTime from './components/TitleTime';
 import LocationSelect from './components/LocationSelect';
 
-import apiSkeleton from './utils/api-helpers';
-import iconOptions from './utils/icon-options';
-import {
-  toMetricTemp,
-  fromMetricTemp,
-  toMetricDist,
-  fromMetricDist
-} from './utils/unit-converters';
-
-const apiOpts = {
-  cache: 'default',
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded'
-  },
-  method: 'GET'
-};
+import * as api from './lib/api';
+import { fromMetricTemp } from './utils/unit-converters';
+import toggleUnits from './lib/toggle-units';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       current: {},
-      siUnits: false
+      siUnits: false,
+      fetching: false
     };
   }
 
-  _setCoords = (lat, lng, handler) => {
-    this.setState({ currentCoords: { lat, lng } }, () => {
-      this._getForecast(lat, lng);
-      this._getReverseGeolocation(lat, lng);
-      if (handler) {
-        handler();
-      }
-    });
+  setCoords = (coords) => {
+    this.setState(
+      { currentCoords: coords, fetching: true },
+      this._updateWeather(this.state.currentCoords)
+    );
   };
 
-  _getLocalCoords = () => {
-    // If browser geolocation is enabled, set coordinates in state.
+  _updateWeather = (coords) => {
+    const forecast = api.fetchForecast(coords);
+    const location = api.fetchReverseGeolocation(coords);
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
+    forecast.current.location = location;
 
-          this._setCoords(lat, lng);
-        },
-
-        // If geolocation fails, query ipinfo.io to set the coordinates in state instead
-
-        () => {
-          fetch('https://ipinfo.io/geo', apiOpts).then((res) => {
-            const location = res.loc.split(',');
-
-            this._setCoords(location[0], location[1]);
-          });
-        }
-      );
-    }
+    this.setState(forecast);
   };
 
-  _getForecast = (lat, lng) => {
-    const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/86c75ecb51f9869d11c2dcfb869d069a/${lat},${lng}`;
+  // _getLocalCoords = () => {
+  //   // If browser geolocation is enabled, set coordinates in state.
 
-    apiSkeleton(url, apiOpts)
-      .then((res) => {
-        const weekWeather = [];
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         const lat = position.coords.latitude;
+  //         const lng = position.coords.longitude;
 
-        // Populate data for the 7-day forecast in an array.
-        for (let i = 1; i < 7; i++) {
-          weekWeather.push({
-            day: moment.unix(res.daily.data[i].time).format('ddd DD'),
-            high: res.daily.data[i].temperatureHigh,
-            low: res.daily.data[i].temperatureLow,
-            icon: iconOptions(res.daily.data[i].icon)
-          });
-        }
+  //         this._setCoords(lat, lng);
+  //       },
 
-        this.setState(
-          {
-            current: Object.assign({}, this.state.current, {
-              temp: res.currently.temperature,
-              summary: res.currently.summary,
-              dayForecast: res.hourly.summary,
-              wind: `${res.currently.windSpeed} mph`,
-              humidity: res.currently.humidity,
-              visibility: `${res.currently.visibility} mi`,
-              icon: iconOptions(res.currently.icon)
-            }),
-            tempRange: [
-              Math.floor(res.daily.data[0].temperatureLow),
-              Math.floor(res.daily.data[0].temperatureHigh)
-            ],
-            weekWeather
-          },
-          () => {
-            document.body.style.background = `url(${
-              this.state.current.icon.background
-            }) no-repeat center center fixed`;
-            document.body.style.backgroundSize = 'cover';
-          }
-        );
-      })
-      .catch((err) => {
-        throw err;
-      });
-  };
+  //       // If geolocation fails, query ipinfo.io to set the coordinates in state instead
 
-  _getReverseGeolocation = (lat, lng) => {
-    const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyB2mV9wU6kQ4pTU-MFS1vUSRaAilCXorxA`;
+  //       () => {
+  //         fetch('https://ipinfo.io/geo', apiOpts).then((res) => {
+  //           const location = res.loc.split(',');
 
-    apiSkeleton(url, apiOpts)
-      .then((res) => {
-        const currentLocation = `${
-          res.results[3].address_components[0].long_name
-        }, ${res.results[3].address_components[2].long_name}`;
+  //           this._setCoords(location[0], location[1]);
+  //         });
+  //       }
+  //     );
+  //   }
+  // };
 
-        this.setState({
-          current: Object.assign({}, this.state.current, {
-            location: currentLocation
-          })
-        });
-      })
-      .catch((err) => {
-        throw err;
-      });
-  };
+  // _getForecast = (coords) => {
+  //   const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/86c75ecb51f9869d11c2dcfb869d069a/${lat},${lng}`;
 
-  _handleFormInput = (location) => {
+  //   apiSkeleton(url, apiOpts)
+  //     .then((res) => {
+  //       const weekWeather = [];
+
+  //       // Populate data for the 7-day forecast in an array.
+  //       for (let i = 1; i < 7; i++) {
+  //         weekWeather.push({
+  //           day: moment.unix(res.daily.data[i].time).format('ddd DD'),
+  //           high: res.daily.data[i].temperatureHigh,
+  //           low: res.daily.data[i].temperatureLow,
+  //           icon: iconOptions(res.daily.data[i].icon)
+  //         });
+  //       }
+
+  //       this.setState(
+  //         {
+  //           current: Object.assign({}, this.state.current, {
+  //             temp: res.currently.temperature,
+  //             summary: res.currently.summary,
+  //             dayForecast: res.hourly.summary,
+  //             wind: `${res.currently.windSpeed} mph`,
+  //             humidity: res.currently.humidity,
+  //             visibility: `${res.currently.visibility} mi`,
+  //             icon: iconOptions(res.currently.icon)
+  //           }),
+  //           tempRange: [
+  //             Math.floor(res.daily.data[0].temperatureLow),
+  //             Math.floor(res.daily.data[0].temperatureHigh)
+  //           ],
+  //           weekWeather
+  //         },
+  //         () => {
+  //           document.body.style.background = `url(${
+  //             this.state.current.icon.background
+  //           }) no-repeat center center fixed`;
+  //           document.body.style.backgroundSize = 'cover';
+  //         }
+  //       );
+  //     })
+  //     .catch((err) => {
+  //       throw err;
+  //     });
+  // };
+
+  // _getReverseGeolocation = (lat, lng) => {
+  //   const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyB2mV9wU6kQ4pTU-MFS1vUSRaAilCXorxA`;
+
+  //   apiSkeleton(url, apiOpts)
+  //     .then((res) => {
+  //       const currentLocation = `${
+  //         res.results[3].address_components[0].long_name
+  //       }, ${res.results[3].address_components[2].long_name}`;
+
+  //       this.setState({
+  //         current: Object.assign({}, this.state.current, {
+  //           location: currentLocation
+  //         })
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       throw err;
+  //     });
+  // };
+
+  handleFormInput = (location) => {
     this.setState({ formLocation: location });
   };
 
-  _handleLocationChange = (e) => {
+  handleLocationChange = (e) => {
     e.preventDefault();
 
     // Use built-in AutoComplete method to update forecast.
     geocodeByAddress(this.state.formLocation)
       .then(results => getLatLng(results[0]))
-      .then((coords) => {
-        this._setCoords(coords.lat, coords.lng, () => {
-          const { lat, lng } = this.state.currentCoords;
-          this.props.history.push(`./${lat},${lng}`);
-        });
-      })
+      .then(coords => this._setCoords(coords))
       .catch((err) => {
         throw err;
       });
   };
 
-  _handleUnitSwitch = () => {
-    function weekHelper(week, converter) {
-      return week.map(day => ({
-        day: day.day,
-        high: converter(day.high),
-        low: converter(day.low),
-        icon: day.icon
-      }));
-    }
+  // _handleUnitSwitch = () => {
+  //   function weekHelper(week, converter) {
+  //     return week.map(day => ({
+  //       day: day.day,
+  //       high: converter(day.high),
+  //       low: converter(day.low),
+  //       icon: day.icon
+  //     }));
+  //   }
 
-    const windValue = this.state.current.wind.slice(0, -4);
-    const visValue = this.state.current.visibility.slice(0, -3);
+  //   const toggleSwitch = document.querySelector('.weather-summary__checkbox');
+  //   toggleSwitch.checked = !toggleSwitch.checked;
 
-    const toggleSwitch = document.querySelector('.weather-summary__checkbox');
-    toggleSwitch.checked = !toggleSwitch.checked;
+  //   if (this.state.siUnits === false) {
+  //     document.getElementById('deg-unit').innerHTML = '&#8451;';
 
-    if (this.state.siUnits === false) {
-      document.getElementById('deg-unit').innerHTML = '&#8451;';
+  //     this.setState({
+  //       current: Object.assign({}, this.state.current, {
+  //         temp: toMetricTemp(this.state.currentTemp),
+  //         wind: `${toMetricDist(Number(windValue))} kph`,
+  //         visibility: `${toMetricDist(Number(visValue))} km`
+  //       }),
+  //       tempRange: toMetricTemp(this.state.tempRange),
+  //       weekWeather: weekHelper(this.state.weekWeather, toMetricTemp),
+  //       siUnits: true
+  //     });
+  //   } else {
+  //     document.getElementById('deg-unit').innerHTML = '&#8457;';
 
-      this.setState({
-        current: Object.assign({}, this.state.current, {
-          temp: toMetricTemp(this.state.currentTemp),
-          wind: `${toMetricDist(Number(windValue))} kph`,
-          visibility: `${toMetricDist(Number(visValue))} km`
-        }),
-        tempRange: toMetricTemp(this.state.tempRange),
-        weekWeather: weekHelper(this.state.weekWeather, toMetricTemp),
-        siUnits: true
-      });
-    } else {
-      document.getElementById('deg-unit').innerHTML = '&#8457;';
-
-      this.setState({
-        current: Object.assign({}, this.state.current, {
-          temp: fromMetricTemp(this.state.currentTemp),
-          wind: `${fromMetricDist(Number(windValue))} mph`,
-          visibility: `${fromMetricDist(Number(visValue))} mi`
-        }),
-        tempRange: fromMetricTemp(this.state.tempRange),
-        weekWeather: weekHelper(this.state.weekWeather, fromMetricTemp),
-        siUnits: false
-      });
-    }
-  };
+  //     this.setState({
+  //       current: Object.assign({}, this.state.current, {
+  //         temp: fromMetricTemp(this.state.currentTemp),
+  //         wind: `${fromMetricDist(Number(windValue))} mph`,
+  //         visibility: `${fromMetricDist(Number(visValue))} mi`
+  //       }),
+  //       tempRange: fromMetricTemp(this.state.tempRange),
+  //       weekWeather: weekHelper(this.state.weekWeather, fromMetricTemp),
+  //       siUnits: false
+  //     });
+  //   }
+  // };
 
   render() {
     // Determine the color of the current temperature based on the range.
@@ -229,7 +214,7 @@ class App extends Component {
 
     const inputProps = {
       value: this.state.formLocation,
-      onChange: this._handleFormInput,
+      onChange: this.handleFormInput,
       placeholder: 'Check out the weather for a different location!'
     };
 
@@ -240,9 +225,10 @@ class App extends Component {
           path="/"
           render={() => (
             <LocationSelect
-              getLocalCoords={this._getLocalCoords}
+              fetchLocalCoords={api.fetchLocalCoords}
+              handleLocationChange={this.handleLocationChange}
               inputProps={inputProps}
-              currentCoords={this.state.currentCoords}
+              setCoords={this.setCoords}
             />
           )}
         />
@@ -253,13 +239,12 @@ class App extends Component {
             <React.Fragment>
               <TitleTime currentLocation={this.state.current.location} />
               <CurrentWeatherContainer
+                setCoords={this.setCoords}
                 currentWeather={this.state.current}
                 tempRange={this.state.tempRange}
                 weekWeather={this.state.weekWeather}
                 tempColor={currentTempColor}
-                handleUnitSwitch={this._handleUnitSwitch}
-                handleLocal={this._getLocalCoords}
-                currentCoords={this.state.currentCoords}
+                handleUnitSwitch={toggleUnits}
               />
             </React.Fragment>
           )}
@@ -278,15 +263,12 @@ class App extends Component {
                 <TitleTime currentLocation={this.state.current.location} />
                 <CurrentWeatherContainer
                   newCoords={newCoords}
-                  setCoords={this._setCoords}
-                  currentCoords={this.state.currentCoords}
+                  setCoords={this.setCoords}
                   currentWeather={this.state.current}
                   tempRange={this.state.tempRange}
                   weekWeather={this.state.weekWeather}
                   tempColor={currentTempColor}
-                  handleUnitSwitch={this._handleUnitSwitch}
-                  getForecast={this._getForecast}
-                  getReverseGeolocation={this._getReverseGeolocation}
+                  handleUnitSwitch={toggleUnits}
                 />
               </React.Fragment>
             );

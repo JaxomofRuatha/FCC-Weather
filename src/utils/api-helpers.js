@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch';
+
 const REQUEST_TIMEOUT_MS = 30000;
 
 const _checkStatus = (res) => {
