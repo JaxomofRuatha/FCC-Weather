@@ -8,13 +8,13 @@ import WeekDisplay from '../components/WeekDisplay';
 import { fetchLocalCoords } from '../lib/api';
 
 class CurrentWeatherContainer extends Component {
-  async componentDidMount() {
+  componentDidMount() {
     if (this.props.newCoords) {
       this.props.setCoords(this.props.newCoords);
     } else {
-      const newCoords = await fetchLocalCoords();
-      console.log(newCoords);
-      this.props.setCoords(newCoords);
+      fetchLocalCoords().then((newCoords) => {
+        this.props.setCoords(newCoords);
+      });
     }
   }
 

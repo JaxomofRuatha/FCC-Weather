@@ -18,12 +18,17 @@ export async function fetchLocalCoords() {
     if (!navigator.geolocation) {
       throw new Error('Browser geolocation is not enabled!');
     }
+
     newCoords = await navigator.geolocation.getCurrentPosition((position) => {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
 
       return { lat, lng };
     });
+
+    if (newCoords === undefined) {
+      throw new Error('Geolocation is not returning coordinates correctly');
+    }
   } catch (err) {
     console.warn(err);
     // If geolocation fails, query ipinfo.io to set the coordinates in state instead

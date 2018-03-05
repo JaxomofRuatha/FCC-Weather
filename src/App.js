@@ -13,7 +13,7 @@ import * as api from './lib/api';
 import { fromMetricTemp } from './utils/unit-converters';
 import toggleUnits from './lib/toggle-units';
 
-class App extends Component {
+export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,113 +23,24 @@ class App extends Component {
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.currentCoords !== this.props.currentCoords) {
+      this._updateWeather(this.state.currentCoords);
+    }
+  }
+
   setCoords = (coords) => {
-    this.setState(
-      { currentCoords: coords, fetching: true },
-      this._updateWeather(this.state.currentCoords)
-    );
+    this.setState({ currentCoords: coords });
   };
 
-  _updateWeather = (coords) => {
-    const forecast = api.fetchForecast(coords);
-    const location = api.fetchReverseGeolocation(coords);
+  _updateWeather = async (coords) => {
+    const forecast = await api.fetchForecast(coords);
+    const location = await api.fetchReverseGeolocation(coords);
 
     forecast.current.location = location;
 
     this.setState(forecast);
   };
-
-  // _getLocalCoords = () => {
-  //   // If browser geolocation is enabled, set coordinates in state.
-
-  //   if (navigator.geolocation) {
-  //     navigator.geolocation.getCurrentPosition(
-  //       (position) => {
-  //         const lat = position.coords.latitude;
-  //         const lng = position.coords.longitude;
-
-  //         this._setCoords(lat, lng);
-  //       },
-
-  //       // If geolocation fails, query ipinfo.io to set the coordinates in state instead
-
-  //       () => {
-  //         fetch('https://ipinfo.io/geo', apiOpts).then((res) => {
-  //           const location = res.loc.split(',');
-
-  //           this._setCoords(location[0], location[1]);
-  //         });
-  //       }
-  //     );
-  //   }
-  // };
-
-  // _getForecast = (coords) => {
-  //   const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/86c75ecb51f9869d11c2dcfb869d069a/${lat},${lng}`;
-
-  //   apiSkeleton(url, apiOpts)
-  //     .then((res) => {
-  //       const weekWeather = [];
-
-  //       // Populate data for the 7-day forecast in an array.
-  //       for (let i = 1; i < 7; i++) {
-  //         weekWeather.push({
-  //           day: moment.unix(res.daily.data[i].time).format('ddd DD'),
-  //           high: res.daily.data[i].temperatureHigh,
-  //           low: res.daily.data[i].temperatureLow,
-  //           icon: iconOptions(res.daily.data[i].icon)
-  //         });
-  //       }
-
-  //       this.setState(
-  //         {
-  //           current: Object.assign({}, this.state.current, {
-  //             temp: res.currently.temperature,
-  //             summary: res.currently.summary,
-  //             dayForecast: res.hourly.summary,
-  //             wind: `${res.currently.windSpeed} mph`,
-  //             humidity: res.currently.humidity,
-  //             visibility: `${res.currently.visibility} mi`,
-  //             icon: iconOptions(res.currently.icon)
-  //           }),
-  //           tempRange: [
-  //             Math.floor(res.daily.data[0].temperatureLow),
-  //             Math.floor(res.daily.data[0].temperatureHigh)
-  //           ],
-  //           weekWeather
-  //         },
-  //         () => {
-  //           document.body.style.background = `url(${
-  //             this.state.current.icon.background
-  //           }) no-repeat center center fixed`;
-  //           document.body.style.backgroundSize = 'cover';
-  //         }
-  //       );
-  //     })
-  //     .catch((err) => {
-  //       throw err;
-  //     });
-  // };
-
-  // _getReverseGeolocation = (lat, lng) => {
-  //   const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyB2mV9wU6kQ4pTU-MFS1vUSRaAilCXorxA`;
-
-  //   apiSkeleton(url, apiOpts)
-  //     .then((res) => {
-  //       const currentLocation = `${
-  //         res.results[3].address_components[0].long_name
-  //       }, ${res.results[3].address_components[2].long_name}`;
-
-  //       this.setState({
-  //         current: Object.assign({}, this.state.current, {
-  //           location: currentLocation
-  //         })
-  //       });
-  //     })
-  //     .catch((err) => {
-  //       throw err;
-  //     });
-  // };
 
   handleFormInput = (location) => {
     this.setState({ formLocation: location });
@@ -146,48 +57,6 @@ class App extends Component {
         throw err;
       });
   };
-
-  // _handleUnitSwitch = () => {
-  //   function weekHelper(week, converter) {
-  //     return week.map(day => ({
-  //       day: day.day,
-  //       high: converter(day.high),
-  //       low: converter(day.low),
-  //       icon: day.icon
-  //     }));
-  //   }
-
-  //   const toggleSwitch = document.querySelector('.weather-summary__checkbox');
-  //   toggleSwitch.checked = !toggleSwitch.checked;
-
-  //   if (this.state.siUnits === false) {
-  //     document.getElementById('deg-unit').innerHTML = '&#8451;';
-
-  //     this.setState({
-  //       current: Object.assign({}, this.state.current, {
-  //         temp: toMetricTemp(this.state.currentTemp),
-  //         wind: `${toMetricDist(Number(windValue))} kph`,
-  //         visibility: `${toMetricDist(Number(visValue))} km`
-  //       }),
-  //       tempRange: toMetricTemp(this.state.tempRange),
-  //       weekWeather: weekHelper(this.state.weekWeather, toMetricTemp),
-  //       siUnits: true
-  //     });
-  //   } else {
-  //     document.getElementById('deg-unit').innerHTML = '&#8457;';
-
-  //     this.setState({
-  //       current: Object.assign({}, this.state.current, {
-  //         temp: fromMetricTemp(this.state.currentTemp),
-  //         wind: `${fromMetricDist(Number(windValue))} mph`,
-  //         visibility: `${fromMetricDist(Number(visValue))} mi`
-  //       }),
-  //       tempRange: fromMetricTemp(this.state.tempRange),
-  //       weekWeather: weekHelper(this.state.weekWeather, fromMetricTemp),
-  //       siUnits: false
-  //     });
-  //   }
-  // };
 
   render() {
     // Determine the color of the current temperature based on the range.
