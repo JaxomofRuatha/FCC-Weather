@@ -103,8 +103,24 @@ class App extends Component {
       placeholder: 'Check out the weather for a different location!'
     };
 
+    const background =
+      this.state.current.icon === undefined
+        ? null
+        : {
+          background: `url(${
+            this.state.current.icon.background
+          }) no-repeat center center fixed`
+        };
+
     return (
-      <main className="forecast-app">
+      <main
+        className="forecast-app"
+        style={
+          !background || this.props.root
+            ? { background: '#020131' }
+            : background
+        }
+      >
         {this.state.fetching && 'Loading...'}
         {this.props.root && (
           <LocationSelect

@@ -2,7 +2,7 @@ const weatherObj = {
   'clear-day': {
     icon: 'CLEAR_DAY',
     color: '#fce637',
-    background: './images/backclearday.jpg!d'
+    background: './images/backclearday.png'
   },
   'clear-night': {
     icon: 'CLEAR_NIGHT',
@@ -12,7 +12,7 @@ const weatherObj = {
   'partly-cloudy-day': {
     icon: 'PARTLY_CLOUDY_DAY',
     color: '#FFFDED',
-    background: './images/backpartlycloudyday.jpeg'
+    background: './images/backpartlycloudyday.png'
   },
   'partly-cloudy-night': {
     icon: 'PARTLY_CLOUDY_NIGHT',
@@ -22,7 +22,7 @@ const weatherObj = {
   'cloudy': {
     icon: 'CLOUDY',
     color: '#edf4ff',
-    background: './images/backcloudy.JPG'
+    background: './images/backcloudy.png'
   },
   'rain': {
     icon: 'RAIN',
@@ -32,17 +32,17 @@ const weatherObj = {
   'sleet': {
     icon: 'SLEET',
     color: '#7d99c6',
-    background: './images/backsleet.JPG'
+    background: './images/backsleet.png'
   },
   'snow': {
     icon: 'SNOW',
     color: '#B2FFE1',
-    background: './images/backsnow.jpg!d'
+    background: './images/backsnow.png'
   },
   'wind': {
     icon: 'WIND',
     color: '#3FBF74',
-    background: './images/backwind.jpg!d'
+    background: './images/backwind.png'
   },
   'fog': {
     icon: 'FOG',
