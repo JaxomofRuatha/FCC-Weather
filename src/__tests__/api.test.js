@@ -19,6 +19,9 @@ describe('API function calls', () => {
       navigator.geolocation = null;
 
       const newCoords = await fetchLocalCoords();
+
+      expect(newCoords).toHaveProperty('lat');
+      expect(newCoords).toHaveProperty('lng');
     });
   });
 });

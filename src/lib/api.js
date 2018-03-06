@@ -60,9 +60,9 @@ function getWeekWeather(res) {
 export function fetchForecast(coords) {
   const url = `https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/86c75ecb51f9869d11c2dcfb869d069a/${
     coords.lat
-  },${coords.lng}`;
+  },${coords.lng}?exclude=minutely,alerts,flags`;
 
-  apiSkeleton(url, apiOpts).then((res) => {
+  return apiSkeleton(url, apiOpts).then((res) => {
     const weekWeather = getWeekWeather(res);
 
     return {
@@ -85,12 +85,9 @@ export function fetchForecast(coords) {
 }
 
 export function fetchReverseGeolocation(coords) {
-  const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/geocode/json?latlng=${
+  const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${
     coords.lat
-  },${coords.lng}&key=AIzaSyB2mV9wU6kQ4pTU-MFS1vUSRaAilCXorxA`;
+  }&lon=${coords.lng}&zoom=10`;
 
-  apiSkeleton(url, apiOpts).then(res =>
-    `${res.results[3].address_components[0].long_name}, ${
-      res.results[3].address_components[2].long_name
-    }`);
+  return apiSkeleton(url, apiOpts).then(res => `${res.address.city}, ${res.address.state}`);
 }

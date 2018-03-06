@@ -5,14 +5,13 @@ import TempRange from './TempRange';
 
 const CurrentWeatherDisplay = ({
   currentWeather,
-  currentIconOptions,
   tempRange,
   handleUnitSwitch,
   tempColor
 }) => (
   <React.Fragment>
     <WeatherSummary
-      currentIconOptions={currentIconOptions}
+      currentIconOptions={currentWeather.icon}
       currentWeather={currentWeather}
       handleUnitSwitch={handleUnitSwitch}
       tempColor={tempColor}
@@ -20,25 +19,15 @@ const CurrentWeatherDisplay = ({
     <TempRange tempRange={tempRange} />
     <section className="info-divider">
       <span>
-        {`Wind: ${currentWeather.wind} | Humidity: ${Math.floor(currentWeather.humidity * 100)}% | Visibility: ${currentWeather.visibility}`}
+        {`Wind: ${currentWeather.wind.value} ${
+          currentWeather.wind.units
+        } | Humidity: ${Math.floor(currentWeather.humidity * 100)}% | Visibility: ${currentWeather.visibility.value} ${
+          currentWeather.visibility.units
+        }`}
       </span>
       <span>{currentWeather.dayForecast}</span>
     </section>
   </React.Fragment>
 );
-
-CurrentWeatherDisplay.propTypes = {
-  currentWeather: PropTypes.shape({
-    currentTemp: PropTypes.number,
-    currentSummary: PropTypes.string,
-    currentDaySummary: PropTypes.string,
-    currentWind: PropTypes.number,
-    currentHumidity: PropTypes.number,
-    currentVisibility: PropTypes.number,
-    currentIcon: PropTypes.string
-  }).isRequired,
-  tempColor: PropTypes.string.isRequired,
-  currentIconOptions: PropTypes.objectOf(PropTypes.string).isRequired
-};
 
 export default CurrentWeatherDisplay;

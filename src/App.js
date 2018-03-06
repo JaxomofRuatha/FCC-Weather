@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
 import 'normalize.css';
 import './css/style.css';
 
-import CurrentWeatherContainer from './containers/CurrentWeatherContainer';
-import TitleTime from './components/TitleTime';
-import LocationSelect from './components/LocationSelect';
-
 import * as api from './lib/api';
 import { fromMetricTemp } from './utils/unit-converters';
 import toggleUnits from './lib/toggle-units';
 
-export class App extends Component {
+import TitleTime from './components/TitleTime';
+import LocationSelect from './components/LocationSelect';
+import CurrentWeatherDisplay from './components/CurrentWeatherDisplay';
+import WeekDisplay from './components/WeekDisplay';
+
+class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,23 +25,37 @@ export class App extends Component {
     };
   }
 
+  componentDidMount() {
+    if (this.props.fetchLocalCoords && !this.state.currentCoords) {
+      // User is going to local forecast and coordinates have not been received.
+      this.props.fetchLocalCoords().then((coords) => {
+        this.setCoords(coords);
+      });
+    } else if (this.props.newCoords) {
+      // User has selected a location.
+      this.setCoords(this.props.newCoords);
+    }
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.currentCoords !== this.props.currentCoords) {
+    // Run a forecast data update if coordinates change.
+    if (prevState.currentCoords !== this.state.currentCoords) {
       this._updateWeather(this.state.currentCoords);
     }
   }
 
   setCoords = (coords) => {
-    this.setState({ currentCoords: coords });
+    this.setState({ currentCoords: coords, fetching: true });
   };
 
   _updateWeather = async (coords) => {
+    // Run API calls with coordinates updated.
     const forecast = await api.fetchForecast(coords);
     const location = await api.fetchReverseGeolocation(coords);
 
     forecast.current.location = location;
 
-    this.setState(forecast);
+    this.setState(Object.assign({}, forecast, { fetching: false }));
   };
 
   handleFormInput = (location) => {
@@ -52,7 +68,7 @@ export class App extends Component {
     // Use built-in AutoComplete method to update forecast.
     geocodeByAddress(this.state.formLocation)
       .then(results => getLatLng(results[0]))
-      .then(coords => this._setCoords(coords))
+      .then(coords => this.setCoords(coords))
       .catch((err) => {
         throw err;
       });
@@ -88,64 +104,40 @@ export class App extends Component {
     };
 
     return (
-      <Switch>
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <LocationSelect
-              fetchLocalCoords={api.fetchLocalCoords}
-              handleLocationChange={this.handleLocationChange}
-              inputProps={inputProps}
-              setCoords={this.setCoords}
-            />
-          )}
-        />
-        <Route
-          exact
-          path="/local"
-          render={() => (
+      <main className="forecast-app">
+        {this.state.fetching && 'Loading...'}
+        {this.props.root && (
+          <LocationSelect
+            fetchLocalCoords={this.props.fetchLocalCoords}
+            handleLocationChange={this.handleLocationChange}
+            inputProps={inputProps}
+            setCoords={this.setCoords}
+          />
+        )}
+        {this.state.current.temp &&
+          !this.state.fetching && (
             <React.Fragment>
               <TitleTime currentLocation={this.state.current.location} />
-              <CurrentWeatherContainer
-                setCoords={this.setCoords}
+              <CurrentWeatherDisplay
                 currentWeather={this.state.current}
                 tempRange={this.state.tempRange}
-                weekWeather={this.state.weekWeather}
                 tempColor={currentTempColor}
                 handleUnitSwitch={toggleUnits}
               />
+              <WeekDisplay weekWeather={this.state.weekWeather} />
+              <Link to="/" className="info-divider">
+                Change current location
+              </Link>
             </React.Fragment>
           )}
-        />
-        <Route
-          exact
-          path="/:locationId"
-          render={({ match }) => {
-            const newCoords = {
-              lat: match.params.locationId.split(',')[0],
-              lng: match.params.locationId.split(',')[1]
-            };
-
-            return (
-              <React.Fragment>
-                <TitleTime currentLocation={this.state.current.location} />
-                <CurrentWeatherContainer
-                  newCoords={newCoords}
-                  setCoords={this.setCoords}
-                  currentWeather={this.state.current}
-                  tempRange={this.state.tempRange}
-                  weekWeather={this.state.weekWeather}
-                  tempColor={currentTempColor}
-                  handleUnitSwitch={toggleUnits}
-                />
-              </React.Fragment>
-            );
-          }}
-        />
-      </Switch>
+      </main>
     );
   }
 }
 
-export default withRouter(App);
+App.propTypes = {
+  root: PropTypes.Boolean,
+  fetchLocalCoords: PropTypes.func
+};
+
+export default App;

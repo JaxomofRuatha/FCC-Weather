@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { App } from '../App';
+import App from '../App';
 
 describe('App component tests', () => {
   it('should render correctly', () => {
@@ -10,10 +10,8 @@ describe('App component tests', () => {
   });
 
   it('should update the coordinates', () => {
-    const testApp = mount(<App />);
+    const testApp = shallow(<App />);
     const testCoords = { lat: 33, lng: 33 };
-
-    console.log(testApp.debug());
 
     expect(testApp.state.currentCoords).not.toBeTruthy();
     testApp.setCoords(testCoords);
