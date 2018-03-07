@@ -30,4 +30,23 @@ describe('Toggle SI Units', () => {
 
     expect(newState).not.toEqual(mockState);
   });
+
+  it('correctly toggles siUnits boolean', () => {
+    const newState = toggleUnits(mockState);
+
+    expect(newState.siUnits).toBeTruthy();
+  });
+
+  it('correctly converts temperature to Celsius', () => {
+    const newState = toggleUnits(mockState);
+
+    expect(newState.current.temp).toEqual(1);
+  });
+
+  it('correctly converts distance to kilometers', () => {
+    const newState = toggleUnits(mockState);
+
+    expect(newState.current.wind.value).toEqual(53);
+    expect(newState.current.visibility.value).toEqual(53);
+  });
 });

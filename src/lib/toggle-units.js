@@ -15,8 +15,9 @@ function weekHelper(week, converter) {
 }
 
 export default function toggleUnits(currentWeather) {
-  if (currentWeather.siUnits === false) {
-    return {
+  let newValues;
+  if (!currentWeather.siUnits) {
+    newValues = {
       current: Object.assign({}, currentWeather.current, {
         temp: toMetricTemp(currentWeather.current.temp),
         wind: {
@@ -32,22 +33,23 @@ export default function toggleUnits(currentWeather) {
       weekWeather: weekHelper(currentWeather.weekWeather, toMetricTemp),
       siUnits: true
     };
+  } else if (currentWeather.siUnits) {
+    newValues = {
+      current: Object.assign({}, currentWeather.current, {
+        temp: fromMetricTemp(currentWeather.current.temp),
+        wind: {
+          value: fromMetricDist(currentWeather.current.wind.value),
+          units: 'mph'
+        },
+        visibility: {
+          value: fromMetricDist(currentWeather.current.visibility.value),
+          units: 'miles'
+        }
+      }),
+      tempRange: fromMetricTemp(currentWeather.tempRange),
+      weekWeather: weekHelper(currentWeather.weekWeather, fromMetricTemp),
+      siUnits: false
+    };
   }
-
-  return {
-    current: Object.assign({}, currentWeather.current, {
-      temp: fromMetricTemp(currentWeather.current.temp),
-      wind: {
-        value: fromMetricDist(currentWeather.current.wind.value),
-        units: 'mph'
-      },
-      visibility: {
-        value: fromMetricDist(currentWeather.current.visibility.value),
-        units: 'miles'
-      }
-    }),
-    tempRange: fromMetricTemp(currentWeather.tempRange),
-    weekWeather: weekHelper(currentWeather.weekWeather, fromMetricTemp),
-    siUnits: false
-  };
+  return newValues;
 }

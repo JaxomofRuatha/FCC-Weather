@@ -1,17 +1,17 @@
 function toCelsius(val) {
-  return Math.round((val - 32) * (5 / 9));
+  return Math.round((val - 32) * 5 / 9);
 }
 
 function toFahrenheit(val) {
-  return Math.round(val * (9 / 5) + 32);
+  return Math.round(val * 9 / 5 + 32);
 }
 
 function toKilometers(val) {
-  return Math.round(val * 1.6);
+  return Math.round(val * 1.609344);
 }
 
 function toMiles(val) {
-  return Math.round(val * 0.6);
+  return Math.round(val * 0.62137119);
 }
 
 export function toMetricTemp(temps) {

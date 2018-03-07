@@ -26,9 +26,9 @@ class App extends Component {
   }
 
   componentDidMount() {
-    if (this.props.fetchLocalCoords && !this.state.currentCoords) {
+    if (this.props.local && !this.state.currentCoords) {
       // User is going to local forecast and coordinates have not been received.
-      this.props.fetchLocalCoords().then((coords) => {
+      api.fetchLocalCoords().then((coords) => {
         this.setCoords(coords);
       });
     } else if (this.props.newCoords) {
@@ -72,6 +72,10 @@ class App extends Component {
       .catch((err) => {
         throw err;
       });
+  };
+
+  handleUnitSwitch = () => {
+    this.setState(toggleUnits(this.state));
   };
 
   render() {
@@ -130,15 +134,16 @@ class App extends Component {
             setCoords={this.setCoords}
           />
         )}
-        {this.state.current.temp &&
-          !this.state.fetching && (
+        {!this.props.root &&
+          !this.state.fetching &&
+          this.state.current.temp && (
             <React.Fragment>
               <TitleTime currentLocation={this.state.current.location} />
               <CurrentWeatherDisplay
                 currentWeather={this.state.current}
                 tempRange={this.state.tempRange}
                 tempColor={currentTempColor}
-                handleUnitSwitch={toggleUnits}
+                handleUnitSwitch={this.handleUnitSwitch}
               />
               <WeekDisplay weekWeather={this.state.weekWeather} />
               <Link to="/" className="info-divider">

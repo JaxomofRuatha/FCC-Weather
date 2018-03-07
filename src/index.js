@@ -2,23 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 
-import { fetchLocalCoords } from './lib/api';
-
 import App from './App';
 
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
-      <Route
-        exact
-        path="/"
-        render={() => <App root fetchLocalCoords={fetchLocalCoords} />}
-      />
-      <Route
-        exact
-        path="/local"
-        render={() => <App fetchLocalCoords={fetchLocalCoords} />}
-      />
+      <Route exact path="/" render={() => <App root />} />
+      <Route exact path="/local" render={() => <App local />} />
       <Route
         exact
         path="/:locationId"

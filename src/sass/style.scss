@@ -15,7 +15,6 @@ body {
   text-align: center;
   font-family: 'Montserrat', sans-serif;
   background: $dark-blue;
-  background-size: cover;
 }
 
 a {
@@ -32,11 +31,20 @@ span {
 @import './modules/temp-range';
 @import './modules/week-display';
 
-.weather-display {
+// Highest level app container
+.forecast-app {
   background: $glass;
+  background-size: cover;
   display: flex;
   flex-direction: column;
   padding: 20px 0;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
 .info-divider{
