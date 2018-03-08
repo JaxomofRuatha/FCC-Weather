@@ -7,7 +7,17 @@ import App from './App';
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
-      <Route exact path="/" render={() => <App root />} />
+      <Route
+        exact
+        path="/"
+        render={({ history }) => {
+          const handleSearch = (coords) => {
+            history.push(`/${coords.lat},${coords.lng}`);
+          };
+
+          return <App root handleSearch={handleSearch} />;
+        }}
+      />
       <Route exact path="/local" render={() => <App local />} />
       <Route
         exact

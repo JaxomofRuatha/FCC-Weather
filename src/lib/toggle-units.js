@@ -14,40 +14,40 @@ function weekHelper(week, converter) {
   }));
 }
 
-export default function toggleUnits(currentWeather) {
+export default function toggleUnits(current, tempRange, weekWeather, siUnits) {
   let newValues;
-  if (!currentWeather.siUnits) {
+  if (!siUnits) {
     newValues = {
-      current: Object.assign({}, currentWeather.current, {
-        temp: toMetricTemp(currentWeather.current.temp),
+      current: Object.assign({}, current, {
+        temp: toMetricTemp(current.temp),
         wind: {
-          value: toMetricDist(currentWeather.current.wind.value),
+          value: toMetricDist(current.wind.value),
           units: 'kph'
         },
         visibility: {
-          value: toMetricDist(currentWeather.current.visibility.value),
+          value: toMetricDist(current.visibility.value),
           units: 'kilometers'
         }
       }),
-      tempRange: toMetricTemp(currentWeather.tempRange),
-      weekWeather: weekHelper(currentWeather.weekWeather, toMetricTemp),
+      tempRange: toMetricTemp(tempRange),
+      weekWeather: weekHelper(weekWeather, toMetricTemp),
       siUnits: true
     };
-  } else if (currentWeather.siUnits) {
+  } else if (siUnits) {
     newValues = {
-      current: Object.assign({}, currentWeather.current, {
-        temp: fromMetricTemp(currentWeather.current.temp),
+      current: Object.assign({}, current, {
+        temp: fromMetricTemp(current.temp),
         wind: {
-          value: fromMetricDist(currentWeather.current.wind.value),
+          value: fromMetricDist(current.wind.value),
           units: 'mph'
         },
         visibility: {
-          value: fromMetricDist(currentWeather.current.visibility.value),
+          value: fromMetricDist(current.visibility.value),
           units: 'miles'
         }
       }),
-      tempRange: fromMetricTemp(currentWeather.tempRange),
-      weekWeather: weekHelper(currentWeather.weekWeather, fromMetricTemp),
+      tempRange: fromMetricTemp(tempRange),
+      weekWeather: weekHelper(weekWeather, fromMetricTemp),
       siUnits: false
     };
   }

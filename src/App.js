@@ -38,9 +38,11 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const updatedCoords = this.state.currentCoords;
+
     // Run a forecast data update if coordinates change.
-    if (prevState.currentCoords !== this.state.currentCoords) {
-      this._updateWeather(this.state.currentCoords);
+    if (prevState.currentCoords !== updatedCoords) {
+      this._updateWeather(updatedCoords);
     }
   }
 
@@ -54,6 +56,10 @@ class App extends Component {
     const location = await api.fetchReverseGeolocation(coords);
 
     forecast.current.location = location;
+
+    if (this.props.handleSearch) {
+      this.props.handleSearch(this.state.currentCoords);
+    }
 
     this.setState(Object.assign({}, forecast, { fetching: false }));
   };
@@ -75,7 +81,10 @@ class App extends Component {
   };
 
   handleUnitSwitch = () => {
-    this.setState(toggleUnits(this.state));
+    const {
+      current, tempRange, weekWeather, siUnits
+    } = this.state;
+    this.setState(toggleUnits(current, tempRange, weekWeather, siUnits));
   };
 
   render() {
@@ -113,7 +122,8 @@ class App extends Component {
         : {
           background: `url(${
             this.state.current.icon.background
-          }) no-repeat center center fixed`
+          }) no-repeat center center fixed`,
+          backgroundSize: 'cover'
         };
 
     return (
