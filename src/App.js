@@ -14,6 +14,7 @@ import TitleTime from './components/TitleTime';
 import LocationSelect from './components/LocationSelect';
 import CurrentWeatherDisplay from './components/CurrentWeatherDisplay';
 import WeekDisplay from './components/WeekDisplay';
+import LoadingScreen from './components/LoadingScreen';
 
 class App extends Component {
   constructor(props) {
@@ -26,12 +27,24 @@ class App extends Component {
   }
 
   componentDidMount() {
-    if (this.props.local && !this.state.currentCoords) {
-      // User is going to local forecast and coordinates have not been received.
+    if (this.props.local) {
+      // User is going to local forecast.
       api.fetchLocalCoords().then((coords) => {
         this.setCoords(coords);
       });
     } else if (this.props.newCoords) {
+      // User has selected a location.
+      this.setCoords(this.props.newCoords);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.local) {
+      // User is going to local forecast and component mounted.
+      api.fetchLocalCoords().then((coords) => {
+        this.setCoords(coords);
+      });
+    } else if (nextProps.newCoords) {
       // User has selected a location.
       this.setCoords(this.props.newCoords);
     }
@@ -117,7 +130,7 @@ class App extends Component {
     };
 
     const background =
-      this.state.current.icon === undefined
+      this.state.current.icon === undefined || this.state.fetching
         ? null
         : {
           background: `url(${
@@ -135,10 +148,9 @@ class App extends Component {
             : background
         }
       >
-        {this.state.fetching && 'Loading...'}
+        {this.state.fetching && <LoadingScreen />}
         {this.props.root && (
           <LocationSelect
-            fetchLocalCoords={this.props.fetchLocalCoords}
             handleLocationChange={this.handleLocationChange}
             inputProps={inputProps}
             setCoords={this.setCoords}
@@ -167,8 +179,17 @@ class App extends Component {
 }
 
 App.propTypes = {
-  root: PropTypes.Boolean,
-  fetchLocalCoords: PropTypes.func
+  root: PropTypes.bool,
+  local: PropTypes.bool,
+  newCoords: PropTypes.objectOf(PropTypes.number),
+  handleSearch: PropTypes.func
+};
+
+App.defaultProps = {
+  root: false,
+  local: false,
+  newCoords: null,
+  handleSearch: null
 };
 
 export default App;

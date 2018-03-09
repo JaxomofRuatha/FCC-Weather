@@ -30,6 +30,8 @@ span {
 @import './modules/weather-summary';
 @import './modules/temp-range';
 @import './modules/week-display';
+@import './modules/loading-screen';
+@import './modules/error-404';
 
 // Highest level app container
 .forecast-app {

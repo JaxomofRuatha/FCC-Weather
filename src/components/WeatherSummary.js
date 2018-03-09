@@ -29,7 +29,7 @@ const WeatherSummary = props => (
           type="checkbox"
           className="weather-summary__checkbox"
           id="weather-summary__checkbox"
-          checked
+          defaultChecked
         />
         <label
           className="weather-summary__toggle"

@@ -61,11 +61,22 @@ const LocationSelect = props => (
   </React.Fragment>
 );
 
+AutoCompleteItem.propTypes = {
+  formattedSuggestion: PropTypes.object.isRequired
+};
+
 LocationSelect.propTypes = {
-  getLocalCoords: PropTypes.func.isRequired,
   handleLocationChange: PropTypes.func.isRequired,
-  inputProps: PropTypes.object,
+  inputProps: PropTypes.shape({
+    value: PropTypes.string,
+    onChange: PropTypes.func.isRequired,
+    placeholder: PropTypes.string.isRequired
+  }).isRequired,
   currentCoords: PropTypes.objectOf(PropTypes.number)
+};
+
+LocationSelect.defaultProps = {
+  currentCoords: {}
 };
 
 export default LocationSelect;
