@@ -1,9 +1,9 @@
 function toCelsius(val) {
-  return Math.round((val - 32) * 5 / 9);
+  return Math.round((val - 32) / 1.8);
 }
 
 function toFahrenheit(val) {
-  return Math.round(val * 9 / 5 + 32);
+  return Math.round(val * 1.8 + 32);
 }
 
 function toKilometers(val) {

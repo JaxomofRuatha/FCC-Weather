@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import { isEqual } from 'lodash';
 
 import 'normalize.css';
 import './css/style.css';
@@ -32,19 +33,19 @@ class App extends Component {
       api.fetchLocalCoords().then((coords) => {
         this.setCoords(coords);
       });
-    } else if (this.props.newCoords) {
+    } else if (this.props.newCoords !== this.state.currentCoords) {
       // User has selected a location.
       this.setCoords(this.props.newCoords);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.local) {
+    if (nextProps.local && !this.state.currentCoords) {
       // User is going to local forecast and component mounted.
       api.fetchLocalCoords().then((coords) => {
         this.setCoords(coords);
       });
-    } else if (nextProps.newCoords) {
+    } else if (nextProps.newCoords !== this.state.currentCoords) {
       // User has selected a location.
       this.setCoords(this.props.newCoords);
     }
@@ -54,25 +55,23 @@ class App extends Component {
     const updatedCoords = this.state.currentCoords;
 
     // Run a forecast data update if coordinates change.
-    if (prevState.currentCoords !== updatedCoords) {
+    if (prevState.currentCoords !== updatedCoords && updatedCoords) {
       this._updateWeather(updatedCoords);
     }
   }
 
   setCoords = (coords) => {
-    this.setState({ currentCoords: coords, fetching: true });
+    this.setState({ currentCoords: coords });
   };
 
   _updateWeather = async (coords) => {
+    this.setState({ fetching: true });
+
     // Run API calls with coordinates updated.
     const forecast = await api.fetchForecast(coords);
     const location = await api.fetchReverseGeolocation(coords);
 
     forecast.current.location = location;
-
-    if (this.props.handleSearch) {
-      this.props.handleSearch(this.state.currentCoords);
-    }
 
     this.setState(Object.assign({}, forecast, { fetching: false }));
   };
@@ -81,23 +80,28 @@ class App extends Component {
     this.setState({ formLocation: location });
   };
 
-  handleLocationChange = (e) => {
+  handleLocationChange = async (e) => {
     e.preventDefault();
 
     // Use built-in AutoComplete method to update forecast.
-    geocodeByAddress(this.state.formLocation)
-      .then(results => getLatLng(results[0]))
-      .then(coords => this.setCoords(coords))
-      .catch((err) => {
-        throw err;
-      });
+    const geocodeRes = await geocodeByAddress(this.state.formLocation);
+    const coords = {
+      lat: geocodeRes[0].geometry.location.lat(),
+      lng: geocodeRes[0].geometry.location.lng()
+    };
+
+    this.props.handleSearch(coords);
+    this.setCoords(coords);
   };
 
-  handleUnitSwitch = () => {
+  handleUnitSwitch = (e) => {
+    e.preventDefault();
+
     const {
       current, tempRange, weekWeather, siUnits
     } = this.state;
-    this.setState(toggleUnits(current, tempRange, weekWeather, siUnits));
+    const newState = toggleUnits(current, tempRange, weekWeather, siUnits);
+    this.setState(newState);
   };
 
   render() {
@@ -129,6 +133,8 @@ class App extends Component {
       placeholder: 'Check out the weather for a different location!'
     };
 
+    // Determine the background image to use from the icon options
+
     const background =
       this.state.current.icon === undefined || this.state.fetching
         ? null
@@ -153,7 +159,6 @@ class App extends Component {
           <LocationSelect
             handleLocationChange={this.handleLocationChange}
             inputProps={inputProps}
-            setCoords={this.setCoords}
           />
         )}
         {!this.props.root &&
