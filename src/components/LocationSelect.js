@@ -11,7 +11,7 @@ const AutoCompleteItem = ({ formattedSuggestion }) => (
 );
 
 const LocationSelect = props => (
-  <React.Fragment>
+  <section className="location-select">
     <Link to="/local">
       <button className="local-button">See my local weather!</button>
     </Link>
@@ -58,7 +58,7 @@ const LocationSelect = props => (
         Go there!
       </button>
     </form>
-  </React.Fragment>
+  </section>
 );
 
 AutoCompleteItem.propTypes = {

@@ -1,13 +1,14 @@
 .temp-range {
-  @include flex-cent-r;
+  @include flex-cent-c;
+  color: $white;
 }
 
-.temp-range__wrapper {
-  @include flex-cent-c;
-}
+// .temp-range__wrapper {
+//   @include flex-cent-c;
+// }
 
 .temp-range__low {
-  color: darkblue;
+  color: $light-blue;
 }
 
 .temp-range__high {
@@ -15,9 +16,9 @@
 }
 
 .temp-range__gauge {
-  width: 15rem;
-  height: 0.5rem;
-  background: linear-gradient(to right, darkblue, darkred);
+  width: 0.5rem;
+  height: 8rem;
+  background: linear-gradient(to top, $med-blue, darkred);
   border-radius: 20px;
   box-shadow: 1px 1px $dark-blue;
   margin: 0 1rem;

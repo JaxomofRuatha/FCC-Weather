@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
-import { isEqual } from 'lodash';
+import { geocodeByAddress } from 'react-places-autocomplete';
 
 import 'normalize.css';
 import './css/style.css';
@@ -145,6 +144,8 @@ class App extends Component {
           backgroundSize: 'cover'
         };
 
+    const degreeSymbol = this.state.siUnits ? '℃' : '℉';
+
     return (
       <main
         className="forecast-app"
@@ -171,6 +172,7 @@ class App extends Component {
                 tempRange={this.state.tempRange}
                 tempColor={currentTempColor}
                 handleUnitSwitch={this.handleUnitSwitch}
+                degreeSymbol={degreeSymbol}
               />
               <WeekDisplay weekWeather={this.state.weekWeather} />
               <Link to="/" className="info-divider">

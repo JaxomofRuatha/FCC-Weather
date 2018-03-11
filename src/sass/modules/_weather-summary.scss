@@ -1,6 +1,7 @@
 .weather-summary {
   @include flex-cent-r;
   font-weight: bold;
+  background: $glass;
 }
 
 .weather-summary__desc {

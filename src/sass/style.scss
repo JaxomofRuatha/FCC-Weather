@@ -2,7 +2,7 @@ $dark-blue: #020131;
 $med-blue: #0b0682;
 $light-blue: #68a2ff;
 $white: #edf4ff;
-$glass: rgba(132, 154, 214, 0.35);
+$glass: rgba(132, 154, 214, 0.2);
 $pastel-green: #3FBF74;
 
 @import './util/mixins';
@@ -35,7 +35,6 @@ span {
 
 // Highest level app container
 .forecast-app {
-  background: $glass;
   display: flex;
   flex-direction: column;
   padding: 20px 0;
@@ -52,4 +51,5 @@ span {
   color: $white;
   background: $med-blue;
   padding: 0.5rem 0;
+  margin: 0.5rem 0;
 }

@@ -7,7 +7,8 @@ const CurrentWeatherDisplay = ({
   currentWeather,
   tempRange,
   handleUnitSwitch,
-  tempColor
+  tempColor,
+  degreeSymbol
 }) => (
   <React.Fragment>
     <WeatherSummary
@@ -15,8 +16,9 @@ const CurrentWeatherDisplay = ({
       currentWeather={currentWeather}
       handleUnitSwitch={handleUnitSwitch}
       tempColor={tempColor}
+      degreeSymbol={degreeSymbol}
+      tempRange={tempRange}
     />
-    <TempRange tempRange={tempRange} />
     <section className="info-divider">
       <span>
         {`Wind: ${currentWeather.wind.value} ${

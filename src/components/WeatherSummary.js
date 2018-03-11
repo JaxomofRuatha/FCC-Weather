@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactAnimatedWeather from 'react-animated-weather';
+import TempRange from './TempRange';
 
 const WeatherSummary = props => (
   <section className="weather-summary">
@@ -22,7 +23,7 @@ const WeatherSummary = props => (
     >
       <h1>
         {Math.round(props.currentWeather.temp)}
-        <sup id="deg-unit">&#8457;</sup>
+        <sup id="deg-unit">{props.degreeSymbol}</sup>
       </h1>
       <div className="weather-summary__switch" onClick={props.handleUnitSwitch}>
         <input
@@ -39,6 +40,7 @@ const WeatherSummary = props => (
           <span className="weather-summary__toggle-switch" />
         </label>
       </div>
+      <TempRange tempRange={props.tempRange} />
     </article>
   </section>
 );

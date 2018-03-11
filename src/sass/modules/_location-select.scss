@@ -5,11 +5,6 @@
   span {
     color: $pastel-green;
   }
-  form {
-    margin: 1rem auto;
-    height: 2rem;
-    padding: 0.5rem 0;
-  }
 }
 
 .local-button {
@@ -24,6 +19,9 @@
 .auto-form {
   @include flex-cent-r;
   width: 80%;
+  margin: 1rem auto;
+  height: 2rem;
+  padding: 0.5rem 0;
   &__submit {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -36,3 +34,12 @@
   }
 }
 
+@media only screen and (max-width: 700px) {
+  .location-select {
+    font-size: 80%;
+  }
+
+  .auto-form {
+    width: 100%;
+  }
+}
