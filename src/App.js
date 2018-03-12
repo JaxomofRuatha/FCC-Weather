@@ -12,7 +12,7 @@ import toggleUnits from './lib/toggle-units';
 
 import TitleTime from './components/TitleTime';
 import LocationSelect from './components/LocationSelect';
-import CurrentWeatherDisplay from './components/CurrentWeatherDisplay';
+import WeatherSummary from './components/WeatherSummary';
 import WeekDisplay from './components/WeekDisplay';
 import LoadingScreen from './components/LoadingScreen';
 
@@ -167,12 +167,13 @@ class App extends Component {
           this.state.current.temp && (
             <React.Fragment>
               <TitleTime currentLocation={this.state.current.location} />
-              <CurrentWeatherDisplay
+              <WeatherSummary
                 currentWeather={this.state.current}
                 tempRange={this.state.tempRange}
                 tempColor={currentTempColor}
                 handleUnitSwitch={this.handleUnitSwitch}
                 degreeSymbol={degreeSymbol}
+                currentIconOptions={this.state.current.icon}
               />
               <WeekDisplay weekWeather={this.state.weekWeather} />
               <Link to="/" className="info-divider">
