@@ -48,6 +48,10 @@ class App extends Component {
       // User has selected a location.
       this.setCoords(this.props.newCoords);
     }
+
+    if (nextProps.root && this.state.siUnits) {
+      this.setState({ siUnits: false });
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {

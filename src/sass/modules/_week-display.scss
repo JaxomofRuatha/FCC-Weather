@@ -1,6 +1,6 @@
 .week-display {
   @include flex-cent-r;
-  padding-bottom: 1rem;
+  padding: 1rem 0;
   &__day {
     @include flex-cent-c;
     background: $dark-blue;

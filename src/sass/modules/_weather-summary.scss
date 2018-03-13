@@ -3,25 +3,38 @@
   justify-content: space-around;
   align-items: center;
   font-weight: bold;
-  background: $glass;
   height: 11rem;
+  padding: 0.5rem 0;
+}
+
+.weather-summary__center {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 2.5;
+  height: 100%;
 }
 
 .weather-summary__desc {
   font-size: 3.5rem;
-  color: $dark-blue;
-  text-shadow: 2px 2px $white;
+  color: $white;
+  text-shadow: 1px 1px $dark-blue;
+  margin: 1rem 0 0 0;
 }
 
-.weather-summary__center {
-  flex: 2.5;
+.weather-summary__miscinfo {
+  background: $dark-blue;
+  color: $white;
+  padding: 0.5rem 0;
 }
 
 .icon-temp {
   background: $dark-blue;
   flex: 1;
   width: 8rem;
-  height: 90%;
+  height: 100%;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 .weather-summary__icon-wrapper {
@@ -36,7 +49,6 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 0.5rem 2rem;
   margin-right: 5rem;
 }
 
