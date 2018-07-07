@@ -1,3 +1,5 @@
+/* global shallow */
+
 import React from 'react';
 
 import App from '../App';
