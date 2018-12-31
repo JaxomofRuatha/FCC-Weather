@@ -11,13 +11,12 @@ global.mount = mount;
 global.faker = faker;
 
 const mockGeolocation = {
-  getCurrentPosition: jest.fn(onSuccess =>
-    onSuccess({
-      coords: {
-        latitude: faker.address.latitude(),
-        longitude: faker.address.longitude()
-      }
-    })),
+  getCurrentPosition: jest.fn(onSuccess => onSuccess({
+    coords: {
+      latitude: faker.address.latitude(),
+      longitude: faker.address.longitude()
+    }
+  })),
   watchPosition: jest.fn()
 };
 

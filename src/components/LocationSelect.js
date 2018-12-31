@@ -3,57 +3,53 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import PlacesAutocomplete from 'react-places-autocomplete';
 
-const AutoCompleteItem = ({ formattedSuggestion }) => (
-  <div>
-    <strong>{formattedSuggestion.mainText}</strong>{' '}
-    <small>{formattedSuggestion.secondaryText}</small>
-  </div>
+const renderFunc = ({
+  getInputProps, suggestions, getSuggestionItemProps, loading
+}) => (
+  <React.Fragment>
+    <input
+      {...getInputProps({
+        placeholder: 'Check out the weather for a different location!'
+      })}
+    />
+    <div className="autocomplete-dropdown-container">
+      {loading && <div>Loading...</div>}
+      {suggestions.map((suggestion) => {
+        const className = suggestion.active
+          ? 'suggestion-item--active'
+          : 'suggestion-item';
+        // inline style for demonstration purpose
+        const style = suggestion.active
+          ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+          : { backgroundColor: '#ffffff', cursor: 'pointer' };
+        return (
+          <div
+            {...getSuggestionItemProps(suggestion, {
+              className,
+              style,
+            })}
+          >
+            <span>{suggestion.description}</span>
+          </div>
+        );
+      })}
+    </div>
+  </React.Fragment>
 );
 
-const LocationSelect = props => (
+const LocationSelect = ({ handleLocationChange, inputProps }) => (
   <section className="location-select">
     <Link to="/local">
-      <button className="local-button">See my local weather!</button>
+      <button className="local-button" type="submit">See my local weather!</button>
     </Link>
     <span>or</span>
-    <form className="auto-form" onSubmit={props.handleLocationChange}>
+    <form className="auto-form" onSubmit={handleLocationChange}>
       <PlacesAutocomplete
-        inputProps={props.inputProps}
-        autocompleteItem={AutoCompleteItem}
-        styles={{
-          root: {
-            flex: 5
-          },
-          input: {
-            background: 'inherit',
-            color: '#EDF4FF',
-            border: '1px solid #68a2ff'
-          },
-          autocompleteContainer: {
-            backgroundColor: '#020131',
-            color: '#EDF4FF',
-            border: '1px solid #68a2ff',
-            marginTop: '-1px'
-          },
-          autocompleteItem: {
-            backgroundColor: '#020131',
-            color: '#EDF4FF',
-            border: 'none'
-          },
-          autocompleteItemActive: {
-            backgroundColor: '#68a2ff',
-            color: '#020131'
-          },
-          googleLogoContainer: {
-            backgroundColor: 'rgba(132, 154, 214, 0.35)',
-            padding: '0.5rem',
-            border: 'none'
-          },
-          googleLogoImage: {
-            width: 100
-          }
-        }}
-      />
+        value={inputProps.value}
+        onChange={inputProps.onChange}
+      >
+        {renderFunc}
+      </PlacesAutocomplete>
       <button type="submit" className="auto-form__submit">
         Go there!
       </button>
@@ -61,22 +57,13 @@ const LocationSelect = props => (
   </section>
 );
 
-AutoCompleteItem.propTypes = {
-  formattedSuggestion: PropTypes.object.isRequired
-};
-
 LocationSelect.propTypes = {
   handleLocationChange: PropTypes.func.isRequired,
   inputProps: PropTypes.shape({
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     placeholder: PropTypes.string.isRequired
-  }).isRequired,
-  currentCoords: PropTypes.objectOf(PropTypes.number)
-};
-
-LocationSelect.defaultProps = {
-  currentCoords: {}
+  }).isRequired
 };
 
 export default LocationSelect;

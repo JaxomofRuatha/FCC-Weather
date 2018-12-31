@@ -7,6 +7,7 @@ import App from './App';
 ReactDOM.render(
   <BrowserRouter>
     <Switch>
+      {/* Initial landing handler, directs to LocationSelect */}
       <Route
         exact
         path="/"
@@ -18,7 +19,9 @@ ReactDOM.render(
           return <App root handleSearch={handleSearch} />;
         }}
       />
+      {/* Gets local weather, static URL */}
       <Route exact path="/local" render={() => <App local />} />
+      {/* Fetches weather based on coordinates entered in URL or form */}
       <Route
         exact
         path="/:locationId"
